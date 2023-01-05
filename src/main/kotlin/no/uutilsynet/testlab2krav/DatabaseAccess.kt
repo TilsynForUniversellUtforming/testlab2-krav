@@ -9,6 +9,6 @@ class DatabaseAccess(val jdbcTemplate: JdbcTemplate) {
 
     @GetMapping("/")
     fun getDatabaseData(): String =
-        jdbcTemplate.query("select * from test") { rs, _ -> rs.getString("name") }
+        jdbcTemplate.query("select * from krav_dummy") { rs, _ -> rs.getString("standard") }
                 .getOrNull(0) ?: "Ingen treff"
 }
