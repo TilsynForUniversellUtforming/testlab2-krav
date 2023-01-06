@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class DatabaseAccess(val jdbcTemplate: JdbcTemplate) {
 
-    @GetMapping("/")
-    fun getDatabaseData(): String =
-        jdbcTemplate.query("select * from krav_dummy") { rs, _ -> rs.getString("standard") }
-                .getOrNull(0) ?: "Ingen treff"
+  @GetMapping("/")
+  fun getDatabaseData(): String =
+    jdbcTemplate
+      .query("select * from krav_dummy") { rs, _ -> rs.getString("standard") }
+      .getOrNull(0)
+      ?: "Ingen treff"
 }
