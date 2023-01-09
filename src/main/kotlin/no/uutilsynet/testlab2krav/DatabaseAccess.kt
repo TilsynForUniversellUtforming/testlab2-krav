@@ -10,7 +10,7 @@ class DatabaseAccess(val jdbcTemplate: JdbcTemplate) {
   @GetMapping("/")
   fun getDatabaseData(): String =
     jdbcTemplate
-      .query("select * from krav_dummy") { rs, _ -> rs.getString("standard") }
+      .query("select * from Regelverk") { rs, _ -> rs.getString("namn") }
       .getOrNull(0)
       ?: "Ingen treff"
 }
