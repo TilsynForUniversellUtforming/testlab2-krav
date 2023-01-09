@@ -61,4 +61,4 @@ create table FunksjonellYtelsesevne (
 create table KravFunksjonellYtelsesevne (
     idKrav int references Krav(id),
     idFunkjsonellYtelsesevne int references FunksjonellYtelsesevne(id)
-)
+);
