@@ -1,16 +1,12 @@
 package no.uutilsynet.testlab2krav
 
-import org.springframework.jdbc.core.JdbcTemplate
+import no.uutilsynet.testlab2krav.dao.KravDao
+import no.uutilsynet.testlab2krav.dto.Krav
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class DatabaseAccess(val jdbcTemplate: JdbcTemplate) {
+class DatabaseAccess(val kravDao: KravDao) {
 
-  @GetMapping("/")
-  fun getDatabaseData(): String =
-    jdbcTemplate
-      .query("select * from Regelverk") { rs, _ -> rs.getString("namn") }
-      .getOrNull(0)
-      ?: "Ingen treff"
+  @GetMapping("/") fun getDatabaseData(): List<Krav> = kravDao.listKrav()
 }
