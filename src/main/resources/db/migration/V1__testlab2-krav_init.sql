@@ -1,61 +1,64 @@
-create table krav_dummy (
+create table Standard (
     id serial primary key,
-    standard varchar not null,
-    standardVersjon varchar not null,
-    krav varchar not null,
-    wcagPrinsipp varchar not null,
-    wcagRetningslinje varchar not null,
-    suksesskriterium varchar not null,
-    brukersTilgjengelighetsbehov varchar not null,
-    samsvarsNivaa varchar not null
+    tittel varchar not null,
+    status varchar not null
 );
 
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '1.1.1 Ikke-tekstlig innhold', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.1 Tekstalternativer', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '1.2.1 Bare lyd og bare video (forhåndsinnspilt)', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.2 Tidsbaserte medier', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '1.2.2 Teksting (forhåndsinnspilt)', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.2 Tidsbaserte medier', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '1.3.1 Informasjon og relasjoner', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.3. Mulig å tilpasse', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '1.4.1 Bruk av farge', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.4. Mulig å skille fra hverandre', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '1.4.2 Styring av lyd', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.4. Mulig å skille fra hverandre', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '1.4.3 Kontrast (minimum)', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.4. Mulig å skille fra hverandre', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '1.4.4 Endring av tekststørrelse', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.4. Mulig å skille fra hverandre', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '1.4.5 Bilder av tekst', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.4. Mulig å skille fra hverandre', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '2.1.1 Tastatur', 'Prinsipp 2: Mulig å betjene', 'Retningslinje 2.1 Tilgjengelig med tastatur', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '2.1.2 Ingen tastaturfelle', 'Prinsipp 2: Mulig å betjene', 'Retningslinje 2.1 Tilgjengelig med tastatur', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '2.2.1 Justerbar hastighet', 'Prinsipp 2: Mulig å betjene', 'Retningslinje 2.2 Nok tid', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '2.2.2 Pause, stopp, skjul', 'Prinsipp 2: Mulig å betjene', 'Retningslinje 2.2 Nok tid', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '2.3.1 Terskelverdi på maksimalt tre glimt', 'Prinsipp 2: Mulig å betjene', 'Retningslinje 2.3 Anfall', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '2.4.1 Hoppe over blokker', 'Prinsipp 2: Mulig å betjene', 'Retningslinje 2.4 Navigerbar', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '2.4.2 Sidetitler ', 'Prinsipp 2: Mulig å betjene', 'Retningslinje 2.4 Navigerbar', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '2.4.3 Fokusrekkefølge ', 'Prinsipp 2: Mulig å betjene', 'Retningslinje 2.4 Navigerbar', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '2.4.4 Formål med lenke (i kontekst)', 'Prinsipp 2: Mulig å betjene', 'Retningslinje 2.4 Navigerbar', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '2.4.5 Flere måter', 'Prinsipp 2: Mulig å betjene', 'Retningslinje 2.4 Navigerbar', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '2.4.6 Overskrifter og ledetekster', 'Prinsipp 2: Mulig å betjene', 'Retningslinje 2.4 Navigerbar', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '3.1.1 Språk på siden', 'Prinsipp 3: Forståelig', 'Retningslinje 3.1 Leselig', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '3.1.2 Språk på deler av innhold', 'Prinsipp 3: Forståelig', 'Retningslinje 3.1 Leselig', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '3.2.1 Fokus', 'Prinsipp 3: Forståelig', 'Retningslinje 3.2 Forutsigbar', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '3.2.2 Inndata', 'Prinsipp 3: Forståelig', 'Retningslinje 3.2 Forutsigbar', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '3.2.3 Konsekvent navigering ', 'Prinsipp 3: Forståelig', 'Retningslinje 3.2 Forutsigbar', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '3.2.4 Konsekvent identifikasjon', 'Prinsipp 3: Forståelig', 'Retningslinje 3.2 Forutsigbar', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '3.3.1 Identifikasjon av feil', 'Prinsipp 3: Forståelig', 'Retningslinje 3.3. Inndatahjelp', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '3.3.2 Ledetekster eller instruksjoner', 'Prinsipp 3: Forståelig', 'Retningslinje 3.3. Inndatahjelp', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '3.3.3 Forslag ved feil', 'Prinsipp 3: Forståelig', 'Retningslinje 3.3. Inndatahjelp', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '3.3.4 Forhindring av feil (juridiske feil, økonomiske feil, datafeil)', 'Prinsipp 3: Forståelig', 'Retningslinje 3.3. Inndatahjelp', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '4.1.1 Parsing (oppdeling)', 'Prinsipp 4: Robust', 'Retningslinje 4.1 Kompatibel', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '4.1.2 Navn, rolle, verdi', 'Prinsipp 4: Robust', 'Retningslinje 4.1 Kompatibel', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '1.3.2 Meningsfylt rekkefølge', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.3. Mulig å tilpasse', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '1.3.3 Sensoriske egenskaper', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.3. Mulig å tilpasse', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.0', '2.4.7 Synlig fokus', 'Prinsipp 2: Mulig å betjene', 'Retningslinje 2.4 Navigerbar', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.1', '1.3.4 Visningsretning', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.3. Mulig å tilpasse', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.1', '1.3.5 Identifiser formål med inndata', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.3. Mulig å tilpasse', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.1', '1.4.10 Dynamisk tilpasning (Reflow)', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.4. Mulig å skille fra hverandre', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.1', '1.4.11 Kontrast for ikke-tekstlig innhold', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.4. Mulig å skille fra hverandre', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.1', '1.4.12 Tekstavstand', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.4. Mulig å skille fra hverandre', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.1', '1.4.13 Pekerfølsomt innhold eller innhold ved tastaturfokus', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.4. Mulig å skille fra hverandre', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.1', '2.1.4 Hurtigtaster som består av ett tegn', 'Prinsipp 2: Mulig å betjene', 'Retningslinje 2.1 Tilgjengelig med tastatur', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.1', '2.5.1 Pekerbevegelser', 'Prinsipp 2: Mulig å betjene', 'Retningslinje 2.5 Inndata modaliteter', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.1', '2.5.2 Pekeravbrytelse', 'Prinsipp 2: Mulig å betjene', 'Retningslinje 2.5 Inndata modaliteter', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.1', '2.5.3 Ledetekst i navn', 'Prinsipp 2: Mulig å betjene', 'Retningslinje 2.5 Inndata modaliteter', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.1', '2.5.4 Bevegelsesaktivering', 'Prinsipp 2: Mulig å betjene', 'Retningslinje 2.5 Inndata modaliteter', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.1', '4.1.3 Statusbeskjeder', 'Prinsipp 4: Robust', 'Retningslinje 4.1 Kompatibel', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.1', '1.2.5 Synstolking (forhåndsinnpilt)', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.2 Tidsbaserte medier', '', '', '');
-INSERT INTO krav_dummy (standard, standardversjon, krav, wcagprinsipp, wcagretningslinje, suksesskriterium, brukerstilgjengelighetsbehov, samsvarsnivaa) VALUES ('WCAG', ' 2.1', '1.2.3 Synstolking eller mediealternativ', 'Prinsipp 1: Mulig å oppfatte', 'Retningslinje 1.2 Tidsbaserte medier', '', '', '');
+create table Krav (
+    id serial primary key,
+    tittel varchar not null,
+    status varchar not null,
+    innhold varchar
+);
+
+create table StandardKrav (
+  idStandard int references Standard(id),
+  idKrav int references Krav(id)
+);
+
+create table Wcag2Krav (
+    id serial primary key,
+    suksessKriterium varchar not null,
+    prinsippp varchar not null,
+    retningslinje varchar not null,
+    samsvarsnivaa varchar not null,
+    idKrav int references Krav(id)
+);
+
+create table Regelverk (
+    id serial primary key,
+    namn varchar not null,
+    type varchar not null,
+    paragraf varchar,
+    virkeomraader varchar
+);
+
+create table Tolking (
+    id serial primary key,
+    idKrav int references Krav(id),
+    sistOppdatert date not null,
+    innhald varchar not null
+);
+
+create table Paragraf (
+    id serial primary key,
+    nr int not null,
+    namn varchar not null,
+    gjeldOffSektor boolean,
+    gjeldPrivatSektor boolean
+);
+
+create table RegelverkParagraf (
+    idRegelverk int references Regelverk(id),
+    idParagraf int references Standard(id)
+);
+
+create table FunksjonellYtelsesevne (
+    id serial primary key,
+    tittel varchar not null
+);
+
+create table KravFunksjonellYtelsesevne (
+    idKrav int references Krav(id),
+    idFunkjsonellYtelsesevne int references FunksjonellYtelsesevne(id)
+)
