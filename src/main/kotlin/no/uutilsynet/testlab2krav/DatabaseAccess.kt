@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class DatabaseAccess(val kravDao: KravDao) {
 
-  @GetMapping("/") fun getDatabaseData(): List<Krav> = kravDao.listKrav()
+  @GetMapping("/krav") fun getDatabaseData(): List<Krav> = kravDao.listKrav()
 }
