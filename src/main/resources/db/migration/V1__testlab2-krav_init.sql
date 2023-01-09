@@ -8,7 +8,7 @@ create table Krav (
     id serial primary key,
     tittel varchar not null,
     status varchar not null,
-    innhold varchar
+    innhald varchar
 );
 
 create table StandardKrav (
