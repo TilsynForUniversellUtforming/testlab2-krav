@@ -1,15 +1,21 @@
 package no.uutilsynet.testlab2krav.dao
 
 import no.uutilsynet.testlab2krav.dto.Krav
-import org.springframework.jdbc.core.DataClassRowMapper
-import org.springframework.jdbc.core.JdbcTemplate
+import no.uutilsynet.testlab2krav.util.KravJdbcUtil.FIND_ALL
+import no.uutilsynet.testlab2krav.util.KravJdbcUtil.FIND_BY_ID
+import no.uutilsynet.testlab2krav.util.KravJdbcUtil.ID_PARAM
+import no.uutilsynet.testlab2krav.util.KravJdbcUtil.kravRowmapper
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Service
 
 @Service
-class KravDao(val jdbcTemplate: JdbcTemplate) {
+class KravDao(val jdbcTemplate: NamedParameterJdbcTemplate) {
 
-  private final val listKravSql: String = "select * from krav"
+    fun listKrav(): List<Krav> = jdbcTemplate.query(FIND_ALL, kravRowmapper)
 
-  fun listKrav(): List<Krav> =
-    jdbcTemplate.query(listKravSql, DataClassRowMapper.newInstance(Krav::class.java))
+    fun findById(id: Int): Krav? {
+        val params = MapSqlParameterSource(ID_PARAM, id)
+        return jdbcTemplate.queryForObject(FIND_BY_ID, params, kravRowmapper)
+    }
 }
