@@ -59,6 +59,11 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains.exposed</groupId>
+            <artifactId>exposed-spring-boot-starter</artifactId>
+            <version>0.41.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -109,7 +114,9 @@
                 <version>${spotless.version}</version>
                 <configuration>
                     <kotlin>
-                        <ktfmt/>
+                        <ktfmt>
+                            <style>DROPBOX</style>
+                        </ktfmt>
                     </kotlin>
                     <pom/>
                 </configuration>
