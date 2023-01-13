@@ -1,7 +1,3 @@
 package no.uutilsynet.testlab2krav.dto
 
-data class Regelverk(
-    val id: Int,
-    val namn: String,
-    val type: String
-)
+data class Regelverk(val id: Int, val namn: String, val type: String)
