@@ -51,7 +51,7 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.CADDTTESTLAB2TESTKRAV_AZURE_CREDENTIALS }}
+          creds: '{"clientId":"${{ secrets.CLIENT_ID }}","clientSecret":"${{ secrets.CLIENT_SECRET }}","subscriptionId":"${{ secrets.SUBSCRIPTION_ID }}","tenantId":"${{ secrets.TENANT_ID }}"}'
 
 
       - name: Deploy to containerapp
@@ -59,7 +59,7 @@ jobs:
         with:
           inlineScript: |
             az config set extension.use_dynamic_install=yes_without_prompt
-            az containerapp registry set -n ca-ddt-testlab2-test-krav -g RG-DDT-Testlab --server acrddtprod.azurecr.io --username  ${{ secrets.CADDTTESTLAB2TESTKRAV_REGISTRY_USERNAME }} --password ${{ secrets.CADDTTESTLAB2TESTKRAV_REGISTRY_PASSWORD }}
+            az containerapp registry set -n ca-ddt-testlab2-test-krav -g RG-DDT-Testlab --server acrddtprod.azurecr.io --username  ${{ secrets.ACR_USERNAME }} --password ${{ secrets.ACR_PASSWORD }}
             az containerapp update -n ca-ddt-testlab2-test-krav -g RG-DDT-Testlab --image acrddtprod.azurecr.io/testlab2-krav:${{ github.sha }}
 
  
