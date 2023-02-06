@@ -60,8 +60,9 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az config set extension.use_dynamic_install=yes_without_prompt
-            az containerapp registry set -n ca-ddt-testlab2-test-krav -g RG-DDT-Testlab --server acrddtprod.azurecr.io --username  ${{ secrets.ACR_USERNAME }} --password ${{ secrets.ACR_PASSWORD }}
-            az containerapp update -n ca-ddt-testlab2-test-krav -g RG-DDT-Testlab --image acrddtprod.azurecr.io/testlab2-krav:${{ github.sha }}
+            az containerapp update \
+            -n ca-ddt-testlab2-test-krav \
+            -g rg-ddt-testlab \
+            --image acrddtprod.azurecr.io/testlab2-krav:${{ github.sha }}
 
  
