@@ -13,7 +13,19 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) : KravApi {
 
     object KravParams {
 
-        const val listKravSql: String = "select * from krav"
+        val listKravSql: String =
+            """
+            select id,
+                    tittel,
+                    status,
+                    innhald,
+                    gjeldautomat,
+                    gjeldnettsider,
+                    gjeldapp,
+                    urlrettleiing 
+                from krav
+            """
+                .trimIndent()
 
         val kravRowmapper = DataClassRowMapper.newInstance(Krav::class.java)
     }
