@@ -28,6 +28,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    needs: login
 
     steps:
       - name: Azure Login
