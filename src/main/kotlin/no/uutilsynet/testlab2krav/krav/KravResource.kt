@@ -3,7 +3,6 @@ package no.uutilsynet.testlab2krav.krav
 import no.uutilsynet.testlab2krav.dao.KravDAO
 import no.uutilsynet.testlab2krav.dto.Krav
 import no.uutilsynet.testlab2krav.dto.KravWcag2x
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -30,10 +29,10 @@ class KravResource(val kravDao: KravDAO) : KravApi {
     @PutMapping("wcag2krav/{id}")
     override fun updateWcagKrav(krav: KravWcag2x): ResponseEntity<String> {
         val status: Int = kravDao.updateWcagKrav(krav)
-        if(status<1) {
-            return ResponseEntity.badRequest().body("Feil ved oppdatering av krav med id ${krav.id}")
+        if (status < 1) {
+            return ResponseEntity.badRequest()
+                .body("Feil ved oppdatering av krav med id ${krav.id}")
         }
         return ResponseEntity.ok("Oppdatert krav med id ${krav.id}")
-
     }
 }
