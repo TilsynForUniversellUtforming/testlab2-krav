@@ -8,14 +8,13 @@ import no.uutilsynet.testlab2krav.dao.KravDAO.KravParams.selectBySuksesskriteriu
 import no.uutilsynet.testlab2krav.dao.KravDAO.KravParams.wcag2xKravRowmapper
 import no.uutilsynet.testlab2krav.dto.Krav
 import no.uutilsynet.testlab2krav.dto.KravWcag2x
-import no.uutilsynet.testlab2krav.krav.KravApi
 import org.springframework.jdbc.core.DataClassRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Component
-class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate)  {
+class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
 
     object KravParams {
 
@@ -35,7 +34,7 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate)  {
 
         val listWcag2xSql: String =
             """
-            select krav.id,
+            select id,
                     tittel,
                     status,
                     innhald,
@@ -47,8 +46,7 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate)  {
                     retningslinje,
                     suksesskriterium,
                     samsvarsnivaa
-                from testlab2_krav.krav, testlab2_krav.wcag2krav
-                where krav.id = wcag2krav.kravid
+                from testlab2_krav.wcag2krav
             """
                 .trimIndent()
 
@@ -62,8 +60,7 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate)  {
 
     fun listKrav(): List<Krav> = jdbcTemplate.query(listKravSql, kravRowmapper)
 
-    fun listWcagKrav(): List<KravWcag2x> =
-        jdbcTemplate.query(listWcag2xSql, wcag2xKravRowmapper)
+    fun listWcagKrav(): List<KravWcag2x> = jdbcTemplate.query(listWcag2xSql, wcag2xKravRowmapper)
 
     fun getWcagKrav(id: Int): KravWcag2x =
         jdbcTemplate.query(selectById, mapOf("id" to id), wcag2xKravRowmapper).first()
@@ -82,8 +79,8 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate)  {
         val kravId =
             jdbcTemplate.update(
                 """
-            insert into testlab2_krav.krav ( tittel, status, innhald, gjeldautomat, gjeldnettsider, gjeldapp, urlrettleiing)
-                values (:tittel, :status, :innhald, :gjeldautomat, :gjeldnettsider, :gjeldapp, :urlrettleiing)
+            insert into testlab2_krav.wcag2krav ( tittel, status, innhald, gjeldautomat, gjeldnettsider, gjeldapp, urlrettleiing,prinsipp, retningslinje, suksesskriterium, samsvarsnivaa)
+                values (:tittel, :status, :innhald, :gjeldautomat, :gjeldnettsider, :gjeldapp, :urlrettleiing, :prinsipp, :retningslinje, :suksesskriterium, :samsvarsnivaa)
             """,
                 mapOf(
                     "tittel" to krav.tittel,
@@ -92,18 +89,11 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate)  {
                     "gjeldautomat" to krav.gjeldAutomat,
                     "gjeldnettsider" to krav.gjeldNettsider,
                     "gjeldapp" to krav.gjeldApp,
-                    "urlrettleiing" to krav.urlRettleiing))
-        jdbcTemplate.update(
-            """
-            insert into testlab2_krav.wcag2krav (kravid, prinsipp, retningslinje, suksesskriterium, samsvarsnivaa)
-                values (:kravid, :prinsipp, :retningslinje, :suksesskriterium, :samsvarsnivaa)
-            """,
-            mapOf(
-                "kravid" to kravId,
-                "prinsipp" to krav.prinsipp,
-                "retningslinje" to krav.retningslinje,
-                "suksesskriterium" to krav.suksesskriterium,
-                "samsvarsnivaa" to krav.samsvarsnivaa))
+                    "urlrettleiing" to krav.urlRettleiing,
+                    "prinsipp" to krav.prinsipp,
+                    "retningslinje" to krav.retningslinje,
+                    "suksesskriterium" to krav.suksesskriterium,
+                    "samsvarsnivaa" to krav.samsvarsnivaa))
         return kravId
     }
 
@@ -112,7 +102,7 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate)  {
         val rows =
             jdbcTemplate.update(
                 """
-            delete from testlab2_krav.krav where id = :kravid
+            delete from testlab2_krav.wcag2krav where id = :kravid
             """,
                 mapOf("kravid" to kravid))
         return rows > 0
@@ -122,25 +112,19 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate)  {
     fun updateWcagKrav(krav: KravWcag2x): Int {
         val updateKravSql =
             """
-            update testlab2_krav.krav
+            update testlab2_krav.wcag2krav
                 set tittel = :tittel,
                     status = :status,
                     innhald = :innhald,
                     gjeldautomat = :gjeldautomat,
                     gjeldnettsider = :gjeldnettsider,
                     gjeldapp = :gjeldapp,
-                    urlrettleiing = :urlrettleiing
-                where id = :id
-            """
-
-        val updateWcag2xKravSql =
-            """
-            update testlab2_krav.wcag2krav
-                set prinsipp = :prinsipp,
+                    urlrettleiing = :urlrettleiing,
+                    prinsipp = :prinsipp,
                     retningslinje = :retningslinje,
                     suksesskriterium = :suksesskriterium,
                     samsvarsnivaa = :samsvarsnivaa
-                where kravid = :kravid
+                where id = :id
             """
 
         var rows =
@@ -154,12 +138,7 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate)  {
                     "gjeldautomat" to krav.gjeldAutomat,
                     "gjeldnettsider" to krav.gjeldNettsider,
                     "gjeldapp" to krav.gjeldApp,
-                    "urlrettleiing" to krav.urlRettleiing))
-        rows +=
-            jdbcTemplate.update(
-                updateWcag2xKravSql,
-                mapOf(
-                    "kravid" to krav.id,
+                    "urlrettleiing" to krav.urlRettleiing,
                     "prinsipp" to krav.prinsipp,
                     "retningslinje" to krav.retningslinje,
                     "suksesskriterium" to krav.suksesskriterium,
