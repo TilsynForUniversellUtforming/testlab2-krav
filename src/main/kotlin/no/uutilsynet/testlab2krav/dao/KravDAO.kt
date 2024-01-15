@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Component
-class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) : KravApi {
+class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate)  {
 
     object KravParams {
 
@@ -60,15 +60,15 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) : KravApi {
         val wcag2xKravRowmapper = DataClassRowMapper.newInstance(KravWcag2x::class.java)
     }
 
-    override fun listKrav(): List<Krav> = jdbcTemplate.query(listKravSql, kravRowmapper)
+    fun listKrav(): List<Krav> = jdbcTemplate.query(listKravSql, kravRowmapper)
 
-    override fun listWcagKrav(): List<KravWcag2x> =
+    fun listWcagKrav(): List<KravWcag2x> =
         jdbcTemplate.query(listWcag2xSql, wcag2xKravRowmapper)
 
-    override fun getWcagKrav(id: Int): KravWcag2x =
+    fun getWcagKrav(id: Int): KravWcag2x =
         jdbcTemplate.query(selectById, mapOf("id" to id), wcag2xKravRowmapper).first()
 
-    override fun getKravBySuksesskriterium(suksesskriterium: String): KravWcag2x =
+    fun getKravBySuksesskriterium(suksesskriterium: String): KravWcag2x =
         jdbcTemplate
             .query(
                 selectBySuksesskriterium,
@@ -77,7 +77,7 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) : KravApi {
             .first()
 
     @Transactional
-    override fun createWcagKrav(krav: KravWcag2x): Int {
+    fun createWcagKrav(krav: KravWcag2x): Int {
 
         val kravId =
             jdbcTemplate.update(
@@ -108,7 +108,7 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) : KravApi {
     }
 
     @Transactional
-    override fun deleteKrav(kravid: Int): Boolean {
+    fun deleteKrav(kravid: Int): Boolean {
         val rows =
             jdbcTemplate.update(
                 """
@@ -119,7 +119,7 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) : KravApi {
     }
 
     @Transactional
-    override fun updateWcagKrav(krav: KravWcag2x): Int {
+    fun updateWcagKrav(krav: KravWcag2x): Int {
         val updateKravSql =
             """
             update testlab2_krav.krav
