@@ -1,12 +1,12 @@
 package no.uutilsynet.testlab2krav.dto
 
-data class Krav(
-    val id: Int,
-    val tittel: String,
-    val status: String,
-    val innhald: String?,
-    val gjeldautomat: Boolean,
-    val gjeldnettsider: Boolean,
-    val gjeldapp: Boolean,
-    val urlrettleiing: String?
+open class Krav(
+    open val id: Int,
+    open val tittel: String,
+    open val status: String,
+    open val innhald: String?,
+    open val gjeldAutomat: Boolean,
+    open val gjeldNettsider: Boolean,
+    open val gjeldApp: Boolean,
+    open val urlRettleiing: String?,
 )
