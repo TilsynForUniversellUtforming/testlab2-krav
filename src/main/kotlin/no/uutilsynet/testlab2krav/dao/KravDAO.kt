@@ -50,9 +50,9 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
             """
                 .trimIndent()
 
-        val selectById = "$listWcag2xSql and id = :id"
+        val selectById = "$listWcag2xSql where id = :id"
 
-        val selectBySuksesskriterium = "$listWcag2xSql and suksesskriterium = :suksesskriterium"
+        val selectBySuksesskriterium = "$listWcag2xSql where suksesskriterium = :suksesskriterium"
 
         val kravRowmapper = DataClassRowMapper.newInstance(Krav::class.java)
         val wcag2xKravRowmapper = DataClassRowMapper.newInstance(KravWcag2x::class.java)
