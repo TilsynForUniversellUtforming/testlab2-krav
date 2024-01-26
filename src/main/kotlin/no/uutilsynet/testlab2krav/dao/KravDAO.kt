@@ -63,15 +63,16 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
     fun listWcagKrav(): List<KravWcag2x> = jdbcTemplate.query(listWcag2xSql, wcag2xKravRowmapper)
 
     fun getWcagKrav(id: Int): KravWcag2x =
-        jdbcTemplate.query(selectById, mapOf("id" to id), wcag2xKravRowmapper).first()
+        jdbcTemplate.query(selectById, mapOf("id" to id), wcag2xKravRowmapper).firstOrNull()
+            ?: throw IllegalArgumentException("Krav med id $id finnes ikkje")
 
     fun getKravBySuksesskriterium(suksesskriterium: String): KravWcag2x =
         jdbcTemplate
             .query(
                 selectBySuksesskriterium,
                 mapOf("suksesskriterium" to suksesskriterium),
-                wcag2xKravRowmapper)
-            .first()
+                wcag2xKravRowmapper).first()
+            ?: throw IllegalArgumentException("Krav med suksesskriterium $suksesskriterium finnes ikkje")
 
     @Transactional
     fun createWcagKrav(krav: KravWcag2x): Int {
