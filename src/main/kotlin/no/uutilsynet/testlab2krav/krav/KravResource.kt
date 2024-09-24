@@ -27,7 +27,7 @@ class KravResource(val kravDao: KravDAO) : KravApi {
     @DeleteMapping override fun deleteKrav(kravId: Int): Boolean = kravDao.deleteKrav(kravId)
 
     @PutMapping("wcag2krav/{id}")
-    override fun updateWcagKrav(@RequestBody krav: KravWcag2x): ResponseEntity<String> {
+    override fun updateWcagKrav(@PathVariable krav: KravWcag2x): ResponseEntity<String> {
         val status: Int = kravDao.updateWcagKrav(krav)
         if (status < 1) {
             return ResponseEntity.badRequest()
