@@ -1,8 +1,5 @@
 package no.uutilsynet.testlab2krav.krav
 
-import java.net.URI
-import java.net.URL
-import java.sql.ResultSet
 import no.uutilsynet.testlab2.constants.KravStatus
 import no.uutilsynet.testlab2.constants.WcagPrinsipp
 import no.uutilsynet.testlab2.constants.WcagRetninglinje
@@ -10,8 +7,11 @@ import no.uutilsynet.testlab2.constants.WcagSamsvarsnivaa
 import no.uutilsynet.testlab2krav.dto.KravWcag2x
 import no.uutilsynet.testlab2krav.findBy
 import org.springframework.jdbc.core.RowMapper
+import java.net.URI
+import java.net.URL
+import java.sql.ResultSet
 
-class Wcag2xRowmapper : RowMapper<KravWcag2x> {
+class Wcag2xRowmapper: RowMapper<KravWcag2x> {
     override fun mapRow(rs: ResultSet, rowNum: Int): KravWcag2x {
         return KravWcag2x(
             rs.getInt("id"),
@@ -28,8 +28,9 @@ class Wcag2xRowmapper : RowMapper<KravWcag2x> {
             WcagSamsvarsnivaa::nivaa.findBy(rs.getString("samsvarsnivaa")))
     }
 
-    private fun validUrlString(urlString: String?): URL? {
-        if (urlString.isNullOrEmpty()) return null
+
+    private fun validUrlString(urlString: String?): URL?  {
+        if(urlString.isNullOrEmpty()) return null
         return URI(urlString).toURL()
     }
 }
