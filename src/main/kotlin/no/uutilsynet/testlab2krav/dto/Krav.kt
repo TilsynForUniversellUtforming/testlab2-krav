@@ -1,6 +1,7 @@
 package no.uutilsynet.testlab2krav.dto
 
 import java.net.URL
+import no.uutilsynet.testlab2.constants.KravStatus
 
 open class Krav(
     open val id: Int,
@@ -12,9 +13,3 @@ open class Krav(
     open val gjeldApp: Boolean,
     open val urlRettleiing: URL?,
 )
-
-enum class KravStatus(val status: String) {
-    nytt("Nytt"),
-    gjeldande("Gjeldande"),
-    utgaatt("Utgått")
-}
