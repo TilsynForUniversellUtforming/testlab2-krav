@@ -31,7 +31,7 @@ class KravResource(val kravDao: KravDAO) : KravApi {
         @RequestBody krav: KravWcag2x,
         @PathVariable id: Int
     ): ResponseEntity<String> {
-        require(krav.id == id) { "Krav id i path og body er ikkje like" }
+        require(krav.id == id) { "Krav id i path og body er ikkje like " + krav.id + " " + id }
         val status: Int = kravDao.updateWcagKrav(krav)
         if (status < 1) {
             return ResponseEntity.badRequest()
