@@ -57,17 +57,17 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
 
         val kravRowmapper = DataClassRowMapper.newInstance(Krav::class.java)
         val wcag2xKravRowmapper = DataClassRowMapper.newInstance(KravWcag2x::class.java)
-
     }
 
     fun listKrav(): List<Krav> = jdbcTemplate.query(listKravSql, kravRowmapper)
 
     fun listWcagKrav(): List<KravWcag2x> {
-        return jdbcTemplate.query(listWcag2xSql,Wcag2xRowmapper())
+        return jdbcTemplate.query(listWcag2xSql, Wcag2xRowmapper())
     }
 
     fun getWcagKrav(id: Int): KravWcag2x =
-        jdbcTemplate.query(selectById, mapOf("id" to id),Wcag2xRowmapper()) .firstOrNull() ?: throw IllegalArgumentException("Krav med id $id finnes ikkje")
+        jdbcTemplate.query(selectById, mapOf("id" to id), Wcag2xRowmapper()).firstOrNull()
+            ?: throw IllegalArgumentException("Krav med id $id finnes ikkje")
 
     fun getKravBySuksesskriterium(suksesskriterium: String): KravWcag2x =
         jdbcTemplate
@@ -139,16 +139,16 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
                 mapOf(
                     "id" to krav.id,
                     "tittel" to krav.tittel,
-                    "status" to krav.status,
+                    "status" to krav.status.status,
                     "innhald" to krav.innhald,
                     "gjeldautomat" to krav.gjeldAutomat,
                     "gjeldnettsider" to krav.gjeldNettsider,
                     "gjeldapp" to krav.gjeldApp,
-                    "urlrettleiing" to krav.urlRettleiing,
-                    "prinsipp" to krav.prinsipp,
-                    "retningslinje" to krav.retningslinje,
+                    "urlrettleiing" to krav.urlRettleiing.toString(),
+                    "prinsipp" to krav.prinsipp?.prinsipp,
+                    "retningslinje" to krav.retningslinje?.retninglinje,
                     "suksesskriterium" to krav.suksesskriterium,
-                    "samsvarsnivaa" to krav.samsvarsnivaa))
+                    "samsvarsnivaa" to krav.samsvarsnivaa?.nivaa))
 
         return rows
     }
