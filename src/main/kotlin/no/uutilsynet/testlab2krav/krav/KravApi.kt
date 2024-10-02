@@ -17,5 +17,5 @@ interface KravApi {
 
     fun deleteKrav(kravId: Int): Boolean
 
-    fun updateWcagKrav(krav: KravWcag2x): ResponseEntity<String>
+    fun updateWcagKrav(krav: KravWcag2x, id: Int): ResponseEntity<String>
 }
