@@ -8,6 +8,7 @@ import no.uutilsynet.testlab2krav.dao.KravDAO.KravParams.selectBySuksesskriteriu
 import no.uutilsynet.testlab2krav.dao.KravDAO.KravParams.wcag2xKravRowmapper
 import no.uutilsynet.testlab2krav.dto.Krav
 import no.uutilsynet.testlab2krav.dto.KravWcag2x
+import no.uutilsynet.testlab2krav.krav.Wcag2xRowmapper
 import org.springframework.jdbc.core.DataClassRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
@@ -60,10 +61,12 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
 
     fun listKrav(): List<Krav> = jdbcTemplate.query(listKravSql, kravRowmapper)
 
-    fun listWcagKrav(): List<KravWcag2x> = jdbcTemplate.query(listWcag2xSql, wcag2xKravRowmapper)
+    fun listWcagKrav(): List<KravWcag2x> {
+        return jdbcTemplate.query(listWcag2xSql, Wcag2xRowmapper())
+    }
 
     fun getWcagKrav(id: Int): KravWcag2x =
-        jdbcTemplate.query(selectById, mapOf("id" to id), wcag2xKravRowmapper).firstOrNull()
+        jdbcTemplate.query(selectById, mapOf("id" to id), Wcag2xRowmapper()).firstOrNull()
             ?: throw IllegalArgumentException("Krav med id $id finnes ikkje")
 
     fun getKravBySuksesskriterium(suksesskriterium: String): KravWcag2x =
@@ -93,8 +96,8 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
                     "gjeldnettsider" to krav.gjeldNettsider,
                     "gjeldapp" to krav.gjeldApp,
                     "urlrettleiing" to krav.urlRettleiing,
-                    "prinsipp" to krav.prinsipp,
-                    "retningslinje" to krav.retningslinje,
+                    "prinsipp" to krav.prinsipp?.prinsipp,
+                    "retningslinje" to krav.retningslinje?.retninglinje,
                     "suksesskriterium" to krav.suksesskriterium,
                     "samsvarsnivaa" to krav.samsvarsnivaa))
         return kravId
@@ -130,22 +133,22 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
                 where id = :id
             """
 
-        var rows =
+        val rows =
             jdbcTemplate.update(
                 updateKravSql,
                 mapOf(
                     "id" to krav.id,
                     "tittel" to krav.tittel,
-                    "status" to krav.status,
+                    "status" to krav.status.status,
                     "innhald" to krav.innhald,
                     "gjeldautomat" to krav.gjeldAutomat,
                     "gjeldnettsider" to krav.gjeldNettsider,
                     "gjeldapp" to krav.gjeldApp,
-                    "urlrettleiing" to krav.urlRettleiing,
-                    "prinsipp" to krav.prinsipp,
-                    "retningslinje" to krav.retningslinje,
+                    "urlrettleiing" to krav.urlRettleiing.toString(),
+                    "prinsipp" to krav.prinsipp?.prinsipp,
+                    "retningslinje" to krav.retningslinje?.retninglinje,
                     "suksesskriterium" to krav.suksesskriterium,
-                    "samsvarsnivaa" to krav.samsvarsnivaa))
+                    "samsvarsnivaa" to krav.samsvarsnivaa?.nivaa))
 
         return rows
     }
