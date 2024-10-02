@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.1</version>
+        <version>3.3.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>no.uutilsynet</groupId>
@@ -14,8 +14,7 @@
     <name>testlab2krav</name>
     <description>testlab2krav</description>
     <properties>
-        <java.version>17</java.version>
-        <kotlin.version>1.7.22</kotlin.version>
+        <java.version>21</java.version>
         <spotless.version>2.29.0</spotless.version>
         <docker.image.prefix>acrddtprod.azurecr.io</docker.image.prefix>
     </properties>
@@ -30,7 +29,7 @@
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
+            <artifactId>flyway-database-postgresql</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
@@ -64,6 +63,11 @@
             <groupId>org.jetbrains.exposed</groupId>
             <artifactId>exposed-spring-boot-starter</artifactId>
             <version>0.41.1</version>
+        </dependency>
+        <dependency>
+            <groupId>no.uutilsynet.testlab2</groupId>
+            <artifactId>testlab2-constants</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -139,5 +143,14 @@
             </plugin>
         </plugins>
     </build>
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/TilsynForUniversellUtforming/*</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
 </project>
