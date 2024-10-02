@@ -42,12 +42,23 @@ jobs:
           registry: ${{ secrets.ACR_ENDPOINT }}
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
+      - name: Setup github packages
+        uses: s4u/maven-settings-action@v3.0.0
+        with:
+          servers: |
+            [{
+                "id": "github",
+                "username": "${{ secrets.GH_USER }}",
+                "password": "${{ secrets.PAT }}"
+            }]
       - name: Build, test and push image
         run: mvn --batch-mode --update-snapshots verify jib:build
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/postgres
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
+          GITHUB_TOKEN_REF: ${{ secrets.PAT }}
+          GITHUB_USER_REF: ${{ secrets.GH_USER }}
 
 
   deploy:
