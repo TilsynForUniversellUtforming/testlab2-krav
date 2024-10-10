@@ -74,7 +74,7 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
             .query(
                 selectBySuksesskriterium,
                 mapOf("suksesskriterium" to suksesskriterium),
-                wcag2xKravRowmapper)
+                Wcag2xRowmapper())
             .firstOrNull()
             ?: throw IllegalArgumentException(
                 "Krav med suksesskriterium $suksesskriterium finnes ikkje")
