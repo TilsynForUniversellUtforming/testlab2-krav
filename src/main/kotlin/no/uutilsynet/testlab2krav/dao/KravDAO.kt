@@ -5,7 +5,6 @@ import no.uutilsynet.testlab2krav.dao.KravDAO.KravParams.listKravSql
 import no.uutilsynet.testlab2krav.dao.KravDAO.KravParams.listWcag2xSql
 import no.uutilsynet.testlab2krav.dao.KravDAO.KravParams.selectById
 import no.uutilsynet.testlab2krav.dao.KravDAO.KravParams.selectBySuksesskriterium
-import no.uutilsynet.testlab2krav.dao.KravDAO.KravParams.wcag2xKravRowmapper
 import no.uutilsynet.testlab2krav.dto.Krav
 import no.uutilsynet.testlab2krav.dto.KravWcag2x
 import no.uutilsynet.testlab2krav.krav.Wcag2xRowmapper
