@@ -69,6 +69,11 @@
             <artifactId>testlab2-constants</artifactId>
             <version>1.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>no.uutilsynet</groupId>
+            <artifactId>testlab2-security-lib</artifactId>
+            <version>0.0.5-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
