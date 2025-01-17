@@ -12,4 +12,5 @@ open class Krav(
     open val gjeldNettsider: Boolean,
     open val gjeldApp: Boolean,
     open val urlRettleiing: URL?,
+    open val kommentarBrudd: String?
 )
