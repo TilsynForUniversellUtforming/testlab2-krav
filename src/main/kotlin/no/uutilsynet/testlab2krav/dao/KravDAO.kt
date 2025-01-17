@@ -45,7 +45,8 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
                     prinsipp,
                     retningslinje,
                     suksesskriterium,
-                    samsvarsnivaa
+                    samsvarsnivaa,
+                    kommentar_brudd
                 from testlab2_krav.wcag2krav
             """
                 .trimIndent()
@@ -84,8 +85,8 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
         val kravId =
             jdbcTemplate.update(
                 """
-            insert into testlab2_krav.wcag2krav ( tittel, status, innhald, gjeldautomat, gjeldnettsider, gjeldapp, urlrettleiing,prinsipp, retningslinje, suksesskriterium, samsvarsnivaa)
-                values (:tittel, :status, :innhald, :gjeldautomat, :gjeldnettsider, :gjeldapp, :urlrettleiing, :prinsipp, :retningslinje, :suksesskriterium, :samsvarsnivaa)
+            insert into testlab2_krav.wcag2krav ( tittel, status, innhald, gjeldautomat, gjeldnettsider, gjeldapp, urlrettleiing,prinsipp, retningslinje, suksesskriterium, samsvarsnivaa,kommentar_brudd)
+                values (:tittel, :status, :innhald, :gjeldautomat, :gjeldnettsider, :gjeldapp, :urlrettleiing, :prinsipp, :retningslinje, :suksesskriterium, :samsvarsnivaa,:kommentarBrudd)
             """,
                 mapOf(
                     "tittel" to krav.tittel,
@@ -98,7 +99,8 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
                     "prinsipp" to krav.prinsipp?.prinsipp,
                     "retningslinje" to krav.retningslinje?.retninglinje,
                     "suksesskriterium" to krav.suksesskriterium,
-                    "samsvarsnivaa" to krav.samsvarsnivaa))
+                    "samsvarsnivaa" to krav.samsvarsnivaa,
+                    "kommentarBrudd" to krav.kommentarBrudd))
         return kravId
     }
 
@@ -128,7 +130,8 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
                     prinsipp = :prinsipp,
                     retningslinje = :retningslinje,
                     suksesskriterium = :suksesskriterium,
-                    samsvarsnivaa = :samsvarsnivaa
+                    samsvarsnivaa = :samsvarsnivaa,
+                    kommentar_brudd = :kommentarBrudd
                 where id = :id
             """
 
@@ -147,7 +150,8 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
                     "prinsipp" to krav.prinsipp?.prinsipp,
                     "retningslinje" to krav.retningslinje?.retninglinje,
                     "suksesskriterium" to krav.suksesskriterium,
-                    "samsvarsnivaa" to krav.samsvarsnivaa?.nivaa))
+                    "samsvarsnivaa" to krav.samsvarsnivaa?.nivaa,
+                    "kommentarBrudd" to krav.kommentarBrudd))
 
         return rows
     }
