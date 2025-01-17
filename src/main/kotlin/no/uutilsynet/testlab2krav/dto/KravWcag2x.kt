@@ -18,7 +18,8 @@ data class KravWcag2x(
     val prinsipp: WcagPrinsipp?,
     val retningslinje: WcagRetninglinje?,
     val suksesskriterium: String,
-    val samsvarsnivaa: WcagSamsvarsnivaa?
+    val samsvarsnivaa: WcagSamsvarsnivaa?,
+    override val kommentarBrudd: String?
 ) :
     Krav(
         id,
@@ -29,4 +30,4 @@ data class KravWcag2x(
         gjeldNettsider,
         gjeldApp,
         urlRettleiing,
-    )
+        kommentarBrudd)
