@@ -25,7 +25,8 @@ class Wcag2xRowmapper : RowMapper<KravWcag2x> {
             WcagPrinsipp::prinsipp.findBy(rs.getString("prinsipp")),
             WcagRetninglinje::retninglinje.findBy(rs.getString("retningslinje")),
             rs.getString("suksesskriterium"),
-            WcagSamsvarsnivaa::nivaa.findBy(rs.getString("samsvarsnivaa")))
+            WcagSamsvarsnivaa::nivaa.findBy(rs.getString("samsvarsnivaa")),
+            rs.getString("kommentar_brudd"))
     }
 
     private fun validUrlString(urlString: String?): URL? {
