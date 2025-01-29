@@ -1,0 +1,12 @@
+spring:
+  config:
+    import: optional:classpath:./dev.yml
+  datasource:
+      url: jdbc:postgresql://localhost:5432/postgres?currentSchema=testlab2_krav
+      username:
+      password:
+  sql:
+      init:
+        platform: postgresql
+  flyway:
+      schemas: testlab2_krav
