@@ -29,7 +29,7 @@ jobs:
           - 5432:5432
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
@@ -79,6 +79,6 @@ jobs:
         with:
           inlineScript: |
             az config set extension.use_dynamic_install=yes_without_prompt
-            az containerapp update -n ca-ddt-testlab2-test-krav -g RG-DDT-Testlab --image acrddtprod.azurecr.io/testlab2-krav:${{ github.sha }} --subscription 47609472-33dd-49d1-8f78-0ed39b182ff2
+            az containerapp update -n ${{ secrets.CONTAINER_APP }} -g ${{ secrets.RESOURCE_GROUP }} --image ${{ secrets.ACR_ENDPOINT }}/testlab2-krav:${{ github.sha }} --subscription  ${{ secrets.SUBSCRIPTION_ID }}
 
 
