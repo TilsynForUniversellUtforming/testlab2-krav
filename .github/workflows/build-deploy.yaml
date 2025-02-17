@@ -52,7 +52,7 @@ jobs:
                 "password": "${{ secrets.PAT }}"
             }]
       - name: Build, test and push image
-        run: mvn --batch-mode --update-snapshots verify jib:build
+        run: mvn -Ddocker.image.prefix=${{ secrets.ACR_ENDPOINT }} --batch-mode --update-snapshots verify jib:build
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/postgres
           SPRING_DATASOURCE_USERNAME: postgres
