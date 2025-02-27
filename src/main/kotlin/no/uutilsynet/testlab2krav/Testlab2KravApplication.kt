@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RestController
 @SpringBootApplication class Testlab2TestingApplication
 
 fun main(args: Array<String>) {
-    runApplication<Testlab2TestingApplication>(*args)
+  runApplication<Testlab2TestingApplication>(*args)
 }
 
 @RestController
 class AppNameResource {
-    @GetMapping("/") fun appName() = mapOf("appName" to "testlab2-krav")
+  @GetMapping("/") fun appName() = mapOf("appName" to "testlab2-krav")
 }

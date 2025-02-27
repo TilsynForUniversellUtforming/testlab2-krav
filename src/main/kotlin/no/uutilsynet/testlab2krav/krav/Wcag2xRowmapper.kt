@@ -12,25 +12,25 @@ import no.uutilsynet.testlab2krav.findBy
 import org.springframework.jdbc.core.RowMapper
 
 class Wcag2xRowmapper : RowMapper<KravWcag2x> {
-    override fun mapRow(rs: ResultSet, rowNum: Int): KravWcag2x {
-        return KravWcag2x(
-            rs.getInt("id"),
-            rs.getString("tittel"),
-            KravStatus::status.findBy(rs.getString("status")) ?: KravStatus.gjeldande,
-            rs.getString("innhald"),
-            rs.getBoolean("gjeldautomat"),
-            rs.getBoolean("gjeldnettsider"),
-            rs.getBoolean("gjeldapp"),
-            validUrlString(rs.getString("urlrettleiing")),
-            WcagPrinsipp::prinsipp.findBy(rs.getString("prinsipp")),
-            WcagRetninglinje::retninglinje.findBy(rs.getString("retningslinje")),
-            rs.getString("suksesskriterium"),
-            WcagSamsvarsnivaa::nivaa.findBy(rs.getString("samsvarsnivaa")),
-            rs.getString("kommentar_brudd"))
-    }
+  override fun mapRow(rs: ResultSet, rowNum: Int): KravWcag2x {
+    return KravWcag2x(
+      rs.getInt("id"),
+      rs.getString("tittel"),
+      KravStatus::status.findBy(rs.getString("status")) ?: KravStatus.gjeldande,
+      rs.getString("innhald"),
+      rs.getBoolean("gjeldautomat"),
+      rs.getBoolean("gjeldnettsider"),
+      rs.getBoolean("gjeldapp"),
+      validUrlString(rs.getString("urlrettleiing")),
+      WcagPrinsipp::prinsipp.findBy(rs.getString("prinsipp")),
+      WcagRetninglinje::retninglinje.findBy(rs.getString("retningslinje")),
+      rs.getString("suksesskriterium"),
+      WcagSamsvarsnivaa::nivaa.findBy(rs.getString("samsvarsnivaa")),
+      rs.getString("kommentar_brudd"))
+  }
 
-    private fun validUrlString(urlString: String?): URL? {
-        if (urlString.isNullOrEmpty()) return null
-        return URI(urlString).toURL()
-    }
+  private fun validUrlString(urlString: String?): URL? {
+    if (urlString.isNullOrEmpty()) return null
+    return URI(urlString).toURL()
+  }
 }

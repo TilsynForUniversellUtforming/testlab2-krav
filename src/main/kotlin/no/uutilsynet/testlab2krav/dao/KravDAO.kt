@@ -16,10 +16,10 @@ import org.springframework.transaction.annotation.Transactional
 @Component
 class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
 
-    object KravParams {
+  object KravParams {
 
-        val listKravSql: String =
-            """
+    val listKravSql: String =
+      """
             select id,
                     tittel,
                     status,
@@ -30,10 +30,10 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
                     urlrettleiing 
                 from testlab2_krav.krav
             """
-                .trimIndent()
+        .trimIndent()
 
-        val listWcag2xSql: String =
-            """
+    val listWcag2xSql: String =
+      """
             select id,
                     tittel,
                     status,
@@ -49,76 +49,73 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
                     kommentar_brudd
                 from testlab2_krav.wcag2krav
             """
-                .trimIndent()
+        .trimIndent()
 
-        val selectById = "$listWcag2xSql where id = :id"
+    val selectById = "$listWcag2xSql where id = :id"
 
-        val selectBySuksesskriterium = "$listWcag2xSql where suksesskriterium = :suksesskriterium"
+    val selectBySuksesskriterium = "$listWcag2xSql where suksesskriterium = :suksesskriterium"
 
-        val kravRowmapper = DataClassRowMapper.newInstance(Krav::class.java)
-        val wcag2xKravRowmapper = DataClassRowMapper.newInstance(KravWcag2x::class.java)
-    }
+    val kravRowmapper = DataClassRowMapper.newInstance(Krav::class.java)
+    val wcag2xKravRowmapper = DataClassRowMapper.newInstance(KravWcag2x::class.java)
+  }
 
-    fun listKrav(): List<Krav> = jdbcTemplate.query(listKravSql, kravRowmapper)
+  fun listKrav(): List<Krav> = jdbcTemplate.query(listKravSql, kravRowmapper)
 
-    fun listWcagKrav(): List<KravWcag2x> {
-        return jdbcTemplate.query(listWcag2xSql, Wcag2xRowmapper())
-    }
+  fun listWcagKrav(): List<KravWcag2x> {
+    return jdbcTemplate.query(listWcag2xSql, Wcag2xRowmapper())
+  }
 
-    fun getWcagKrav(id: Int): KravWcag2x =
-        jdbcTemplate.query(selectById, mapOf("id" to id), Wcag2xRowmapper()).firstOrNull()
-            ?: throw IllegalArgumentException("Krav med id $id finnes ikkje")
+  fun getWcagKrav(id: Int): KravWcag2x =
+    jdbcTemplate.query(selectById, mapOf("id" to id), Wcag2xRowmapper()).firstOrNull()
+      ?: throw IllegalArgumentException("Krav med id $id finnes ikkje")
 
-    fun getKravBySuksesskriterium(suksesskriterium: String): KravWcag2x =
-        jdbcTemplate
-            .query(
-                selectBySuksesskriterium,
-                mapOf("suksesskriterium" to suksesskriterium),
-                Wcag2xRowmapper())
-            .firstOrNull()
-            ?: throw IllegalArgumentException(
-                "Krav med suksesskriterium $suksesskriterium finnes ikkje")
+  fun getKravBySuksesskriterium(suksesskriterium: String): KravWcag2x =
+    jdbcTemplate
+      .query(
+        selectBySuksesskriterium, mapOf("suksesskriterium" to suksesskriterium), Wcag2xRowmapper())
+      .firstOrNull()
+      ?: throw IllegalArgumentException("Krav med suksesskriterium $suksesskriterium finnes ikkje")
 
-    @Transactional
-    fun createWcagKrav(krav: KravWcag2x): Int {
+  @Transactional
+  fun createWcagKrav(krav: KravWcag2x): Int {
 
-        val kravId =
-            jdbcTemplate.update(
-                """
+    val kravId =
+      jdbcTemplate.update(
+        """
             insert into testlab2_krav.wcag2krav ( tittel, status, innhald, gjeldautomat, gjeldnettsider, gjeldapp, urlrettleiing,prinsipp, retningslinje, suksesskriterium, samsvarsnivaa,kommentar_brudd)
                 values (:tittel, :status, :innhald, :gjeldautomat, :gjeldnettsider, :gjeldapp, :urlrettleiing, :prinsipp, :retningslinje, :suksesskriterium, :samsvarsnivaa,:kommentarBrudd)
             """,
-                mapOf(
-                    "tittel" to krav.tittel,
-                    "status" to krav.status,
-                    "innhald" to krav.innhald,
-                    "gjeldautomat" to krav.gjeldAutomat,
-                    "gjeldnettsider" to krav.gjeldNettsider,
-                    "gjeldapp" to krav.gjeldApp,
-                    "urlrettleiing" to krav.urlRettleiing,
-                    "prinsipp" to krav.prinsipp?.prinsipp,
-                    "retningslinje" to krav.retningslinje?.retninglinje,
-                    "suksesskriterium" to krav.suksesskriterium,
-                    "samsvarsnivaa" to krav.samsvarsnivaa,
-                    "kommentarBrudd" to krav.kommentarBrudd))
-        return kravId
-    }
+        mapOf(
+          "tittel" to krav.tittel,
+          "status" to krav.status,
+          "innhald" to krav.innhald,
+          "gjeldautomat" to krav.gjeldAutomat,
+          "gjeldnettsider" to krav.gjeldNettsider,
+          "gjeldapp" to krav.gjeldApp,
+          "urlrettleiing" to krav.urlRettleiing,
+          "prinsipp" to krav.prinsipp?.prinsipp,
+          "retningslinje" to krav.retningslinje?.retninglinje,
+          "suksesskriterium" to krav.suksesskriterium,
+          "samsvarsnivaa" to krav.samsvarsnivaa,
+          "kommentarBrudd" to krav.kommentarBrudd))
+    return kravId
+  }
 
-    @Transactional
-    fun deleteKrav(kravid: Int): Boolean {
-        val rows =
-            jdbcTemplate.update(
-                """
+  @Transactional
+  fun deleteKrav(kravid: Int): Boolean {
+    val rows =
+      jdbcTemplate.update(
+        """
             delete from testlab2_krav.wcag2krav where id = :kravid
             """,
-                mapOf("kravid" to kravid))
-        return rows > 0
-    }
+        mapOf("kravid" to kravid))
+    return rows > 0
+  }
 
-    @Transactional
-    fun updateWcagKrav(krav: KravWcag2x): Int {
-        val updateKravSql =
-            """
+  @Transactional
+  fun updateWcagKrav(krav: KravWcag2x): Int {
+    val updateKravSql =
+      """
             update testlab2_krav.wcag2krav
                 set tittel = :tittel,
                     status = :status,
@@ -135,24 +132,24 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
                 where id = :id
             """
 
-        val rows =
-            jdbcTemplate.update(
-                updateKravSql,
-                mapOf(
-                    "id" to krav.id,
-                    "tittel" to krav.tittel,
-                    "status" to krav.status.status,
-                    "innhald" to krav.innhald,
-                    "gjeldautomat" to krav.gjeldAutomat,
-                    "gjeldnettsider" to krav.gjeldNettsider,
-                    "gjeldapp" to krav.gjeldApp,
-                    "urlrettleiing" to krav.urlRettleiing.toString(),
-                    "prinsipp" to krav.prinsipp?.prinsipp,
-                    "retningslinje" to krav.retningslinje?.retninglinje,
-                    "suksesskriterium" to krav.suksesskriterium,
-                    "samsvarsnivaa" to krav.samsvarsnivaa?.nivaa,
-                    "kommentarBrudd" to krav.kommentarBrudd))
+    val rows =
+      jdbcTemplate.update(
+        updateKravSql,
+        mapOf(
+          "id" to krav.id,
+          "tittel" to krav.tittel,
+          "status" to krav.status.status,
+          "innhald" to krav.innhald,
+          "gjeldautomat" to krav.gjeldAutomat,
+          "gjeldnettsider" to krav.gjeldNettsider,
+          "gjeldapp" to krav.gjeldApp,
+          "urlrettleiing" to krav.urlRettleiing.toString(),
+          "prinsipp" to krav.prinsipp?.prinsipp,
+          "retningslinje" to krav.retningslinje?.retninglinje,
+          "suksesskriterium" to krav.suksesskriterium,
+          "samsvarsnivaa" to krav.samsvarsnivaa?.nivaa,
+          "kommentarBrudd" to krav.kommentarBrudd))
 
-        return rows
-    }
+    return rows
+  }
 }
