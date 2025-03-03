@@ -38,4 +38,13 @@ class KravResource(val kravDao: KravDAO) : KravApi {
     }
     return ResponseEntity.ok("Oppdatert krav med id ${krav.id}")
   }
+
+  @DeleteMapping("wcag2krav/{id}")
+  override fun deleteWcagKrav(@PathVariable id: Int): ResponseEntity<String> {
+    val status: Boolean = kravDao.deleteKrav(id)
+    if (!status) {
+      return ResponseEntity.badRequest().body("Feil ved sletting av krav med id $id")
+    }
+    return ResponseEntity.ok("Slettet krav med id $id")
+  }
 }

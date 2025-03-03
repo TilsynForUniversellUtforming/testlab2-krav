@@ -18,4 +18,6 @@ interface KravApi {
   fun deleteKrav(kravId: Int): Boolean
 
   fun updateWcagKrav(krav: KravWcag2x, id: Int): ResponseEntity<String>
+    @DeleteMapping("wcag2krav/{id}")
+    fun deleteWcagKrav(id: Int): ResponseEntity<String>
 }
