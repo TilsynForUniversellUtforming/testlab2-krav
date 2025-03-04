@@ -31,3 +31,18 @@ data class KravWcag2x(
     gjeldApp,
     urlRettleiing,
     kommentarBrudd)
+
+data class KravInit(
+  val tittel: String,
+  val status: KravStatus,
+  val innhald: String?,
+  val gjeldAutomat: Boolean,
+  val gjeldNettsider: Boolean,
+  val gjeldApp: Boolean,
+  val urlRettleiing: URL?,
+  val prinsipp: WcagPrinsipp?,
+  val retningslinje: WcagRetninglinje?,
+  val suksesskriterium: String,
+  val samsvarsnivaa: WcagSamsvarsnivaa?,
+  val kommentarBrudd: String?
+)

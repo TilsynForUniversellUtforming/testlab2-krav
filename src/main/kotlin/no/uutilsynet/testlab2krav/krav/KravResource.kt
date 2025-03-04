@@ -2,6 +2,7 @@ package no.uutilsynet.testlab2krav.krav
 
 import no.uutilsynet.testlab2krav.dao.KravDAO
 import no.uutilsynet.testlab2krav.dto.Krav
+import no.uutilsynet.testlab2krav.dto.KravInit
 import no.uutilsynet.testlab2krav.dto.KravWcag2x
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -22,7 +23,7 @@ class KravResource(val kravDao: KravDAO) : KravApi {
     kravDao.getKravBySuksesskriterium(suksesskriterium)
 
   @PostMapping("wcag2krav")
-  override fun createWcagKrav(@RequestBody krav: KravWcag2x): Int = kravDao.createWcagKrav(krav)
+  override fun createWcagKrav(@RequestBody krav: KravInit): Int = kravDao.createWcagKrav(krav)
 
   @DeleteMapping override fun deleteKrav(kravId: Int): Boolean = kravDao.deleteKrav(kravId)
 
