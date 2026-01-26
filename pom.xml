@@ -28,6 +28,11 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-database-postgresql</artifactId>
         </dependency>
@@ -58,11 +63,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.exposed</groupId>
-            <artifactId>exposed-spring-boot-starter</artifactId>
-            <version>0.41.1</version>
         </dependency>
         <dependency>
             <groupId>no.uutilsynet.testlab2</groupId>

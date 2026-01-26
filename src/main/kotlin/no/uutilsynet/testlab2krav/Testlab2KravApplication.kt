@@ -19,23 +19,21 @@ import org.springframework.web.client.RestTemplate
 @EnableCaching
 class Testlab2TestingApplication {
 
-    @Bean
-    fun restTemplate(restTemplateBuilder: RestTemplateBuilder): RestTemplate {
-        val objectMapper =
-            jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        val mappingJackson2HttpMessageConverter = MappingJackson2HttpMessageConverter()
-        mappingJackson2HttpMessageConverter.objectMapper = objectMapper
-        mappingJackson2HttpMessageConverter.supportedMediaTypes =
-            listOf(MediaType.APPLICATION_JSON, MediaType.APPLICATION_OCTET_STREAM)
+  @Bean
+  fun restTemplate(restTemplateBuilder: RestTemplateBuilder): RestTemplate {
+    val objectMapper =
+      jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+    val mappingJackson2HttpMessageConverter = MappingJackson2HttpMessageConverter()
+    mappingJackson2HttpMessageConverter.objectMapper = objectMapper
+    mappingJackson2HttpMessageConverter.supportedMediaTypes =
+      listOf(MediaType.APPLICATION_JSON, MediaType.APPLICATION_OCTET_STREAM)
 
-        return restTemplateBuilder
-            .messageConverters(mappingJackson2HttpMessageConverter)
-            .build()
-    }
+    return restTemplateBuilder.messageConverters(mappingJackson2HttpMessageConverter).build()
+  }
 }
 
 fun main(args: Array<String>) {
-    runApplication<Testlab2TestingApplication>(*args)
+  runApplication<Testlab2TestingApplication>(*args)
 }
 
 @RestController
