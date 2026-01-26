@@ -17,6 +17,10 @@ class TestregelService(private val testregelDAO: TestregelDAO, private val kravD
     testregelDAO.getTestregel(testregelId)
       ?: throw IllegalArgumentException("Fant ikkje testregel med id $testregelId")
 
+    fun getTestregelByKey(testregelKey: String): Testregel =
+        testregelDAO.getTestregelByTestregelId(testregelKey)
+            ?: throw IllegalArgumentException("Fant ikkje testregel med nøkkel $testregelKey")
+
   fun getTestregelListFromIds(testregelIdList: List<Int>): List<Testregel> {
     return testregelDAO.getMany(testregelIdList)
   }

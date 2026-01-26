@@ -10,6 +10,7 @@ import no.uutilsynet.testlab2krav.testregel.model.Testregel
 import no.uutilsynet.testlab2krav.testregel.model.Testregel.Companion.validateTestregel
 import no.uutilsynet.testlab2krav.testregel.model.TestregelAggregate
 import no.uutilsynet.testlab2krav.testregel.model.TestregelInit
+import no.uutilsynet.testlab2krav.testregel.model.TestregelKravResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -27,24 +28,48 @@ class TestregelResource(
   private val locationForId: (Int) -> URI = { id -> URI("/v1/testreglar/${id}") }
 
   @GetMapping("{id}")
-  fun getTestregel(@PathVariable id: Int): ResponseEntity<Testregel> {
-    return runCatching { testregelService.getTestregel(id) }
+  fun getTestregel(@PathVariable id: Int): ResponseEntity<TestregelKravResponse> {
+    return runCatching {
+        testregelService.getTestregel(id).toTestregelKravResponse()
+    }
       .fold(
         onSuccess = { ResponseEntity.ok(it) }, onFailure = { ResponseEntity.notFound().build() })
   }
 
-  @GetMapping
+    @GetMapping("testregelKey/{testregelKey}")
+    fun getTestregelByKey(@PathVariable testregelKey: String): ResponseEntity<TestregelKravResponse> {
+        return runCatching {
+            testregelService.getTestregelByKey(testregelKey)
+                .toTestregelKravResponse()
+           }
+            .fold(
+                onSuccess = { ResponseEntity.ok(it) }, onFailure = { ResponseEntity.notFound().build() })
+    }
+
+
+    @GetMapping
   fun getTestregelList(
-    @RequestParam(required = false) includeMetadata: Boolean = false
   ): ResponseEntity<List<Testregel>> =
     runCatching {
         val testregelList = testregelService.getTestregelList()
-        ResponseEntity.ok(testregelList.let { if (includeMetadata) it else it.map { tr -> tr } })
+        ResponseEntity.ok(testregelList)
       }
       .getOrElse {
         logger.error("Feila ved henting av testreglar", it)
         ResponseEntity.internalServerError().build()
       }
+
+    @GetMapping("listTestregelKrav")
+    fun getTestregelKravList(
+    ): ResponseEntity<List<TestregelKravResponse>> =
+        runCatching {
+            val testregelList = testregelService.getTestregelList().map { it.toTestregelKravResponse() }
+            ResponseEntity.ok(testregelList)
+        }
+            .getOrElse {
+                logger.error("Feila ved henting av testreglar", it)
+                ResponseEntity.internalServerError().build()
+            }
 
   @PostMapping
   fun createTestregel(@RequestBody testregelInit: TestregelInit): ResponseEntity<out Any> =
@@ -182,4 +207,16 @@ class TestregelResource(
         ResponseEntity.notFound().build()
       }
   }
+
+    fun Testregel.toTestregelKravResponse(): TestregelKravResponse {
+        val krav = kravDAO.getWcagKrav(kravId)
+        return TestregelKravResponse(
+            id = id,
+            testregelId = testregelId,
+            namn = namn,
+            krav = krav,
+        )
+    }
+
 }
+
