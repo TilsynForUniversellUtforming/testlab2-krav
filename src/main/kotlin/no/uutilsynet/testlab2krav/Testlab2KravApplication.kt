@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate
 @SpringBootApplication
 @ConfigurationPropertiesScan
 @EnableCaching
-class Testlab2TestingApplication {
+class Testlab2KravApplication {
 
   @Bean
   fun restTemplate(restTemplateBuilder: RestTemplateBuilder): RestTemplate {
@@ -33,7 +33,7 @@ class Testlab2TestingApplication {
 }
 
 fun main(args: Array<String>) {
-  runApplication<Testlab2TestingApplication>(*args)
+  runApplication<Testlab2KravApplication>(*args)
 }
 
 @RestController

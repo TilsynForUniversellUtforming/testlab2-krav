@@ -48,10 +48,14 @@ class TestregelResource(
 
 
     @GetMapping
-  fun getTestregelList(
+  fun getTestregelListByIdList(@RequestParam testregelIdList: List<Int>?
   ): ResponseEntity<List<Testregel>> =
     runCatching {
         val testregelList = testregelService.getTestregelList()
+        if(testregelIdList != null){
+            ResponseEntity.ok(testregelList.filter { testregelIdList.contains(it.id) })
+        }
+        else
         ResponseEntity.ok(testregelList)
       }
       .getOrElse {
