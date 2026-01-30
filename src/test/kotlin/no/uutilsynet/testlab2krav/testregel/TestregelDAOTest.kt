@@ -1,7 +1,8 @@
 package no.uutilsynet.testlab2krav.testregel
 
-import no.uutilsynet.testlab2.constants.KravStatus
+import java.net.URI
 import java.time.Instant
+import no.uutilsynet.testlab2.constants.KravStatus
 import no.uutilsynet.testlab2.constants.TestlabLocale
 import no.uutilsynet.testlab2.constants.TestregelInnholdstype
 import no.uutilsynet.testlab2.constants.TestregelModus
@@ -11,7 +12,6 @@ import no.uutilsynet.testlab2.constants.WcagRetninglinje
 import no.uutilsynet.testlab2.constants.WcagSamsvarsnivaa
 import no.uutilsynet.testlab2krav.dao.KravDAO
 import no.uutilsynet.testlab2krav.dto.KravInit
-import no.uutilsynet.testlab2krav.dto.KravWcag2x
 import no.uutilsynet.testlab2krav.testregel.TestConstants.name
 import no.uutilsynet.testlab2krav.testregel.TestConstants.testregelSchemaAutomatisk
 import no.uutilsynet.testlab2krav.testregel.TestConstants.testregelTestKravId
@@ -21,7 +21,6 @@ import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import java.net.URI
 
 @SpringBootTest(properties = ["spring.datasource.url= jdbc:tc:postgresql:16-alpine:///test-db"])
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -154,7 +153,7 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val
   }
 
   private fun createTestregel(
-      testregelInit: TestregelInit =
+    testregelInit: TestregelInit =
       TestregelInit(
         testregelId = "QW-ACT-R1",
         namn = name,
@@ -168,31 +167,29 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val
         tema = 1,
         testobjekt = 1,
         kravTilSamsvar = "")
-  ) : Int {
+  ): Int {
 
-      val id = testregelDAO.createTestregel(testregelInit).also { deleteThese.add(it) }
-      return id;
+    val id = testregelDAO.createTestregel(testregelInit).also { deleteThese.add(it) }
+    return id
   }
 
-    private fun createKrav(): Int {
-        val wcagKrav: KravInit = KravInit(
-            tittel = "1.1.1 Ikke-tekstlig innhold",
-            status = KravStatus.gjeldande,
-            innhald = "Alt ikke-tekstlig innhold som presenteres for brukere av en teknologi, skal ha en tekstlig ekvivalent som tjener tilsvarende formål,",
-            gjeldAutomat = true,
-            gjeldNettsider = true,
-            gjeldApp = true,
-            prinsipp = WcagPrinsipp.robust,
-            retningslinje = WcagRetninglinje.leselig,
-            suksesskriterium = "1.1.1",
-            samsvarsnivaa = WcagSamsvarsnivaa.A,
-            kommentarBrudd = "Manglende tekstalternativ for bilder",
-            urlRettleiing = URI(
-                "https://www.w3.org/TR/WCAG20/#text-equiv"
-            ).toURL()
-        )
+  private fun createKrav(): Int {
+    val wcagKrav: KravInit =
+      KravInit(
+        tittel = "1.1.1 Ikke-tekstlig innhold",
+        status = KravStatus.gjeldande,
+        innhald =
+          "Alt ikke-tekstlig innhold som presenteres for brukere av en teknologi, skal ha en tekstlig ekvivalent som tjener tilsvarende formål,",
+        gjeldAutomat = true,
+        gjeldNettsider = true,
+        gjeldApp = true,
+        prinsipp = WcagPrinsipp.robust,
+        retningslinje = WcagRetninglinje.leselig,
+        suksesskriterium = "1.1.1",
+        samsvarsnivaa = WcagSamsvarsnivaa.A,
+        kommentarBrudd = "Manglende tekstalternativ for bilder",
+        urlRettleiing = URI("https://www.w3.org/TR/WCAG20/#text-equiv").toURL())
 
-        return kravDAO.createWcagKrav(wcagKrav)
-
-    }
+    return kravDAO.createWcagKrav(wcagKrav)
+  }
 }
