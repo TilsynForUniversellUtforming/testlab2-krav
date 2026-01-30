@@ -17,6 +17,11 @@ create table tema
 );
 
 
+alter table wcag2krav
+ADD CONSTRAINT wcag2krav_suksesskriterium_unique UNIQUE (suksesskriterium);
+
+alter table wcag2krav
+DROP CONSTRAINT wcag2krav_kravid_fkey;
 
 
 
@@ -36,7 +41,6 @@ create table testregel
     type                 text                     default 'nett'::text      not null,
     testobjekt           integer references testobjekt,
     krav_til_samsvar     text,
-    innhaldstype_testing integer
-        references innhaldstype_testing,
-    krav_id              integer                 references wcag2krav                not null
+    innhaldstype_testing integer references innhaldstype_testing,
+    krav_id              integer references wcag2krav                not null
 );

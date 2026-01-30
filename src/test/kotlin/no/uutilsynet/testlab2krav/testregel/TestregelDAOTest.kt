@@ -1,10 +1,17 @@
 package no.uutilsynet.testlab2krav.testregel
 
+import java.net.URI
 import java.time.Instant
+import no.uutilsynet.testlab2.constants.KravStatus
 import no.uutilsynet.testlab2.constants.TestlabLocale
 import no.uutilsynet.testlab2.constants.TestregelInnholdstype
 import no.uutilsynet.testlab2.constants.TestregelModus
 import no.uutilsynet.testlab2.constants.TestregelStatus
+import no.uutilsynet.testlab2.constants.WcagPrinsipp
+import no.uutilsynet.testlab2.constants.WcagRetninglinje
+import no.uutilsynet.testlab2.constants.WcagSamsvarsnivaa
+import no.uutilsynet.testlab2krav.dao.KravDAO
+import no.uutilsynet.testlab2krav.dto.KravInit
 import no.uutilsynet.testlab2krav.testregel.TestConstants.name
 import no.uutilsynet.testlab2krav.testregel.TestConstants.testregelSchemaAutomatisk
 import no.uutilsynet.testlab2krav.testregel.TestConstants.testregelTestKravId
@@ -18,7 +25,7 @@ import org.springframework.test.context.ActiveProfiles
 @SpringBootTest(properties = ["spring.datasource.url= jdbc:tc:postgresql:16-alpine:///test-db"])
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("test")
-class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO) {
+class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val kravDAO: KravDAO) {
 
   val deleteThese: MutableList<Int> = mutableListOf()
 
@@ -160,5 +167,29 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO) {
         tema = 1,
         testobjekt = 1,
         kravTilSamsvar = "")
-  ) = testregelDAO.createTestregel(testregelInit).also { deleteThese.add(it) }
+  ): Int {
+
+    val id = testregelDAO.createTestregel(testregelInit).also { deleteThese.add(it) }
+    return id
+  }
+
+  private fun createKrav(): Int {
+    val wcagKrav: KravInit =
+      KravInit(
+        tittel = "1.1.1 Ikke-tekstlig innhold",
+        status = KravStatus.gjeldande,
+        innhald =
+          "Alt ikke-tekstlig innhold som presenteres for brukere av en teknologi, skal ha en tekstlig ekvivalent som tjener tilsvarende formål,",
+        gjeldAutomat = true,
+        gjeldNettsider = true,
+        gjeldApp = true,
+        prinsipp = WcagPrinsipp.robust,
+        retningslinje = WcagRetninglinje.leselig,
+        suksesskriterium = "1.1.1",
+        samsvarsnivaa = WcagSamsvarsnivaa.A,
+        kommentarBrudd = "Manglende tekstalternativ for bilder",
+        urlRettleiing = URI("https://www.w3.org/TR/WCAG20/#text-equiv").toURL())
+
+    return kravDAO.createWcagKrav(wcagKrav)
+  }
 }

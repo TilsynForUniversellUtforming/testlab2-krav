@@ -181,7 +181,7 @@ class TestregelValidatorsTest {
   inner class ValidateRequiredFields {
     @ParameterizedTest
     @MethodSource(
-      "no.uutilsynet.testlab2testing.testregel.TestregelValidatorsTest#invalidParamsSource")
+      "no.uutilsynet.testlab2krav.testregel.TestregelValidatorsTest#invalidParamsSource")
     @DisplayName("TestregelSchema være definert for forenklet kontroll")
     fun testregelSchemaErrorForenklet(invalidParam: String?) {
       val schema = validateSchema(invalidParam, TestregelModus.automatisk)
@@ -190,7 +190,7 @@ class TestregelValidatorsTest {
 
     @ParameterizedTest
     @MethodSource(
-      "no.uutilsynet.testlab2testing.testregel.TestregelValidatorsTest#invalidParamsSource")
+      "no.uutilsynet.testlab2krav.testregel.TestregelValidatorsTest#invalidParamsSource")
     @DisplayName("TestregelSchema være definert for manuell kontroll")
     fun testregelSchemaErrorManuell(invalidParam: String?) {
       val schema = validateSchema(invalidParam, TestregelModus.manuell)
