@@ -142,8 +142,6 @@ class TestregelResource(
     val innhaldstypeTestingList = testregelService.getInnhaldstypeForTesting()
     val kravList = kravDAO.listWcagKrav()
 
-    println("Kravlist: $kravList")
-
     return testregelBaseList.map { testregel ->
       TestregelAggregate(
         id = testregel.id,
