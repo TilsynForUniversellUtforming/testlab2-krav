@@ -21,6 +21,7 @@ import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import java.net.URI
 
 @SpringBootTest(properties = ["spring.datasource.url= jdbc:tc:postgresql:16-alpine:///test-db"])
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -153,7 +154,7 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val
   }
 
   private fun createTestregel(
-    testregelInit: TestregelInit =
+      testregelInit: TestregelInit =
       TestregelInit(
         testregelId = "QW-ACT-R1",
         namn = name,
