@@ -30,8 +30,8 @@ class TestregelResource(
   private val locationForId: (Int) -> URI = { id -> URI("/v1/testreglar/${id}") }
 
   @GetMapping("{id}")
-  fun getTestregel(@PathVariable id: Int): ResponseEntity<TestregelKravResponse> {
-    return runCatching { testregelService.getTestregel(id).toTestregelKravResponse() }
+  fun getTestregel(@PathVariable id: Int): ResponseEntity<Testregel> {
+    return runCatching { testregelService.getTestregel(id) }
       .fold(
         onSuccess = { ResponseEntity.ok(it) }, onFailure = { ResponseEntity.notFound().build() })
   }
