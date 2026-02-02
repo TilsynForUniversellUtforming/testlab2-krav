@@ -66,7 +66,7 @@ class TestregelResourceTest {
     Mockito.`when`(testregelService.getTemaForTestregel()).thenReturn(listOf(tema))
     Mockito.`when`(testregelService.getTestobjekt()).thenReturn(listOf(testobjekt))
     Mockito.`when`(testregelService.getInnhaldstypeForTesting()).thenReturn(listOf(innhaldstype))
-    Mockito.`when`(kravDAO.listKrav()).thenReturn(listOf(krav))
+    Mockito.`when`(kravDAO.listWcagKrav()).thenReturn(listOf(krav))
 
     val result = resource.getTestregelAggregates()
 

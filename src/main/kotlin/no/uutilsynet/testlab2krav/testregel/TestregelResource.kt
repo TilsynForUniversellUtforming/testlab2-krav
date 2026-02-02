@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
+private const val ERROR_GET_TESTREGLAR = "Feila ved henting av testreglar"
+
 @RestController
 @RequestMapping("v1/testreglar")
 class TestregelResource(
@@ -28,8 +30,8 @@ class TestregelResource(
   private val locationForId: (Int) -> URI = { id -> URI("/v1/testreglar/${id}") }
 
   @GetMapping("{id}")
-  fun getTestregel(@PathVariable id: Int): ResponseEntity<TestregelKravResponse> {
-    return runCatching { testregelService.getTestregel(id).toTestregelKravResponse() }
+  fun getTestregel(@PathVariable id: Int): ResponseEntity<Testregel> {
+    return runCatching { testregelService.getTestregel(id) }
       .fold(
         onSuccess = { ResponseEntity.ok(it) }, onFailure = { ResponseEntity.notFound().build() })
   }
@@ -54,7 +56,7 @@ class TestregelResource(
         } else ResponseEntity.ok(testregelList)
       }
       .getOrElse {
-        logger.error("Feila ved henting av testreglar", it)
+        logger.error(ERROR_GET_TESTREGLAR, it)
         ResponseEntity.internalServerError().build()
       }
 
@@ -65,7 +67,7 @@ class TestregelResource(
         ResponseEntity.ok(testregelList)
       }
       .getOrElse {
-        logger.error("Feila ved henting av testreglar", it)
+        logger.error(ERROR_GET_TESTREGLAR, it)
         ResponseEntity.internalServerError().build()
       }
 
@@ -201,7 +203,7 @@ class TestregelResource(
             kravTilSamsvar = testregel.kravTilSamsvar))
       }
       .getOrElse {
-        logger.error("Feila ved henting av testreglar", it)
+        logger.error(ERROR_GET_TESTREGLAR, it)
         ResponseEntity.notFound().build()
       }
   }

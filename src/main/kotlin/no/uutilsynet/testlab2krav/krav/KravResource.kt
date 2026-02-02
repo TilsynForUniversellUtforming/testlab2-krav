@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("v1/krav")
 class KravResource(val kravDao: KravDAO) : KravApi {
 
-  @GetMapping override fun listKrav(): List<Krav> = kravDao.listKrav()
+  @GetMapping override fun listKrav(): List<Krav> = kravDao.listWcagKrav()
 
   @GetMapping("wcag2krav") override fun listWcagKrav(): List<KravWcag2x> = kravDao.listWcagKrav()
 
