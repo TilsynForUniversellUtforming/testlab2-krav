@@ -37,7 +37,7 @@ class TestregelDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
       """select id, testregel_id,versjon,namn, krav_id, status, dato_sist_endra,type, modus ,spraak,tema,testobjekt,krav_til_samsvar,testregel_schema, innhaldstype_testing from "testlab2_krav"."testregel" where id = :id order by id"""
 
     val getTestregelByTestregelId =
-      """select id, testregel_id,versjon,namn, krav_id, status, dato_sist_endra,type, modus ,spraak,tema,testobjekt,krav_til_samsvar,testregel_schema, innhaldstype_testing from "testlab2_krav"."testregel" where testregel_id = :testregelId and versjon=(select max(versjon) from testlab2_testing.testregel where testregel_id= :testregelId) order by id limit 1"""
+      """select id, testregel_id,versjon,namn, krav_id, status, dato_sist_endra,type, modus ,spraak,tema,testobjekt,krav_til_samsvar,testregel_schema, innhaldstype_testing from "testlab2_krav"."testregel" where testregel_id = :testregelId and versjon=(select max(versjon) from testlab2_krav.testregel where testregel_id= :testregelId) order by id limit 1"""
 
     val testregelRowMapper = DataClassRowMapper.newInstance(Testregel::class.java)
 
