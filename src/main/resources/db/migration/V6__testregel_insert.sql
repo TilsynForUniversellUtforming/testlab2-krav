@@ -28,6 +28,8 @@ insert into tema (id, tema) values (8, 'Tastaturbetjening');
 
 
 
+
+
 insert into innhaldstype_testing (id, innhaldstype) values (1, 'Bilde og grafikk');
 insert into innhaldstype_testing (id, innhaldstype) values (2, 'Captcha');
 insert into innhaldstype_testing (id, innhaldstype) values (3, 'Heile nettsida');
@@ -46,5 +48,4 @@ insert into innhaldstype_testing (id, innhaldstype) values (15, 'Sveiping');
 insert into innhaldstype_testing (id, innhaldstype) values (16, 'Tabell');
 insert into innhaldstype_testing (id, innhaldstype) values (17, 'Tastatur');
 insert into innhaldstype_testing (id, innhaldstype) values (18, 'Tekst');
-
 
