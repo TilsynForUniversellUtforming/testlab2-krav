@@ -193,7 +193,7 @@ class TestregelDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
   @Cacheable("innhaldstypeForTesting")
   fun getInnhaldstypeForTesting(): List<InnhaldstypeTesting> =
     jdbcTemplate.query(
-      """select * from "innhaldstype_testing"""",
+      """select id, innhaldstype from "innhaldstype_testing"""",
       DataClassRowMapper.newInstance(InnhaldstypeTesting::class.java))
 
   fun getTemaForTestregel(): List<Tema> =
