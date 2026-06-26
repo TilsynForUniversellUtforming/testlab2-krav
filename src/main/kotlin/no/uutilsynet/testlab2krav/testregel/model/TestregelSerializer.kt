@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
 
-
 @Component
 class TestregelSerializer : StdSerializer<Testregel>(Testregel::class.java) {
 
@@ -46,17 +45,19 @@ class TestregelSerializer : StdSerializer<Testregel>(Testregel::class.java) {
     when (definition) {
       is StringTestregelDefinition -> {
         gen.writeStartObject()
+        gen.writeStringField("type", "string")
         gen.writeStringField("body", definition.body)
         gen.writeEndObject()
       }
       is QualwebTestregelDefinition -> {
         gen.writeStartObject()
+        gen.writeStringField("type", "qualweb")
         gen.writeStringField("key", definition.key)
         gen.writeEndObject()
       }
-
       is ManuellForenklaTestregelDefinition -> {
         gen.writeStartObject()
+        gen.writeStringField("type", "manuell-forenkla")
         gen.writeStringField("description", definition.description)
         provider.defaultSerializeField("utfall", definition.utfall, gen)
         gen.writeEndObject()

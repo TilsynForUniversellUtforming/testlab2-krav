@@ -38,6 +38,7 @@ class TestregelSerializerTest {
     val json = objectMapper.writeValueAsString(testregel)
     val tree = objectMapper.readTree(json)
 
+    assertThat(tree.get("definition").get("type").asText()).isEqualTo("qualweb")
     assertThat(tree.get("definition").get("key").asText()).isEqualTo("QW-ACT-R1")
     assertThat(tree.get("definition").get("body")).isNull()
   }
@@ -75,6 +76,7 @@ class TestregelSerializerTest {
     val json = objectMapper.writeValueAsString(testregel)
     val tree = objectMapper.readTree(json)
 
+    assertThat(tree.get("definition").get("type").asText()).isEqualTo("manuell-forenkla")
     assertThat(tree.get("definition").get("description").asText()).isEqualTo("forenkla")
     assertThat(tree.get("definition").get("utfall").size()).isEqualTo(1)
     assertThat(tree.get("definition").get("utfall").first().get("beskrivelse").asText())
