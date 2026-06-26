@@ -6,8 +6,6 @@ class StringTestregelDefinition(val body: String) : ITestregelDefinition
 
 class QualwebTestregelDefinition(val key: String) : ITestregelDefinition
 
-class StepTestregelDefinition(val body: String) : ITestregelDefinition
-
 class ManuellForenklaTestregelDefinition(
   val description: String,
   val utfall: List<TestregelUtfall>

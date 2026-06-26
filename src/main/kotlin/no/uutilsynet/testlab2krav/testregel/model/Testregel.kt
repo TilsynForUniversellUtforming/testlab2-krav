@@ -1,5 +1,6 @@
 package no.uutilsynet.testlab2krav.testregel.model
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import java.time.Instant
 import no.uutilsynet.testlab2.constants.TestlabLocale
 import no.uutilsynet.testlab2.constants.TestregelInnholdstype
@@ -10,6 +11,7 @@ import no.uutilsynet.testlab2.validators.validateTestregelId
 import no.uutilsynet.testlab2krav.dto.KravWcag2x
 import no.uutilsynet.testlab2krav.testregel.validateSchema
 
+@JsonSerialize(using = TestregelSerializer::class)
 data class Testregel(
   val id: Int,
   val testregelId: String,
