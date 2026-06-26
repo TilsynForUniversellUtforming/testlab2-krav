@@ -7,6 +7,7 @@ import no.uutilsynet.testlab2krav.dao.KravDAO
 import no.uutilsynet.testlab2krav.dto.KravWcag2x
 import no.uutilsynet.testlab2krav.testregel.import.TestregelImportService
 import no.uutilsynet.testlab2krav.testregel.model.InnhaldstypeTesting
+import no.uutilsynet.testlab2krav.testregel.model.StringTestregelDefinition
 import no.uutilsynet.testlab2krav.testregel.model.Tema
 import no.uutilsynet.testlab2krav.testregel.model.Testobjekt
 import no.uutilsynet.testlab2krav.testregel.model.Testregel
@@ -42,7 +43,8 @@ class TestregelResourceTest {
         kravTilSamsvar = "svar",
         tema = 2,
         testobjekt = 3,
-        innhaldstypeTesting = 4)
+        innhaldstypeTesting = 4,
+        definition = StringTestregelDefinition("schema"))
     val tema = Tema(id = 2, tema = "Tema")
     val testobjekt = Testobjekt(id = 3, testobjekt = "Objekt")
     val innhaldstype = InnhaldstypeTesting(id = 4, innhaldstype = "Innhald")

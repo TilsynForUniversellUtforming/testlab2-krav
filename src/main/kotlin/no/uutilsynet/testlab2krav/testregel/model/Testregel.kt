@@ -26,12 +26,22 @@ data class Testregel(
   val kravTilSamsvar: String?,
   val testregelSchema: String,
   val innhaldstypeTesting: Int?,
+  var definition: ITestregelDefinition
 ) {
+  init {
+    if (modus == TestregelModus.automatisk) {
+      definition = QualwebTestregelDefinition(testregelSchema)
+    } else if (modus != TestregelModus.manuellForenkla) {
+      definition = StringTestregelDefinition(testregelSchema)
+    }
+  }
+
   companion object {
     fun Testregel.validateTestregel(): Result<Testregel> = runCatching {
       val name = validateNamn(this.namn).getOrThrow()
       val testregelId = validateTestregelId(this.testregelId).getOrThrow()
       val schema = validateSchema(this.testregelSchema, this.modus).getOrThrow()
+      val definition = StringTestregelDefinition(schema)
 
       Testregel(
         this.id,
@@ -48,7 +58,8 @@ data class Testregel(
         this.testobjekt,
         this.kravTilSamsvar,
         schema,
-        this.innhaldstypeTesting)
+        this.innhaldstypeTesting,
+        definition)
     }
   }
 }

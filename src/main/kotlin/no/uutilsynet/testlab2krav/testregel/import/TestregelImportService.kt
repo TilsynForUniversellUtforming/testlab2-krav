@@ -12,6 +12,7 @@ import no.uutilsynet.testlab2.constants.TestregelModus
 import no.uutilsynet.testlab2.constants.TestregelStatus
 import no.uutilsynet.testlab2krav.dao.KravDAO
 import no.uutilsynet.testlab2krav.testregel.TestregelDAO
+import no.uutilsynet.testlab2krav.testregel.model.StringTestregelDefinition
 import no.uutilsynet.testlab2krav.testregel.model.Testregel
 import no.uutilsynet.testlab2krav.testregel.model.TestregelInit
 import org.slf4j.LoggerFactory
@@ -255,7 +256,7 @@ class TestregelImportService(
           kravTilSamsvar = testregel.kravTilSamsvar,
           innhaldstypeTesting = existing.innhaldstypeTesting,
           datoSistEndra = Instant.now(),
-        )
+          definition = StringTestregelDefinition(existing.testregelSchema))
 
       testregelDAO.updateTestregel(updated)
     } else {

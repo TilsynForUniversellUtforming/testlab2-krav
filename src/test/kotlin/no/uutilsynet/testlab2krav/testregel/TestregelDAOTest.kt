@@ -7,6 +7,7 @@ import no.uutilsynet.testlab2.constants.TestlabLocale
 import no.uutilsynet.testlab2.constants.TestregelInnholdstype
 import no.uutilsynet.testlab2.constants.TestregelModus
 import no.uutilsynet.testlab2.constants.TestregelStatus
+import no.uutilsynet.testlab2.constants.TestresultatUtfall
 import no.uutilsynet.testlab2.constants.WcagPrinsipp
 import no.uutilsynet.testlab2.constants.WcagRetninglinje
 import no.uutilsynet.testlab2.constants.WcagSamsvarsnivaa
@@ -15,7 +16,9 @@ import no.uutilsynet.testlab2krav.dto.KravInit
 import no.uutilsynet.testlab2krav.testregel.TestConstants.name
 import no.uutilsynet.testlab2krav.testregel.TestConstants.testregelSchemaAutomatisk
 import no.uutilsynet.testlab2krav.testregel.TestConstants.testregelTestKravId
+import no.uutilsynet.testlab2krav.testregel.model.ManuellForenklaTestregelDefinition
 import no.uutilsynet.testlab2krav.testregel.model.TestregelInit
+import no.uutilsynet.testlab2krav.testregel.model.TestregelUtfall
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -150,6 +153,73 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val
     val newDate = updatedTestregel?.datoSistEndra
 
     Assertions.assertThat(newDate).isAfter(oldDate)
+  }
+
+  @Test
+  @DisplayName("Skal handtere testregel_utfall for manuell-forenkla testregel")
+  fun crudTestregelUtfallForManuellForenkla() {
+    val schemaWithUtfall =
+      """
+      {
+        "utfall": [
+          {"id": 1, "beskrivelse": "Fyrste utfall", "testresultat": "samsvar", "default": true},
+          {"id": 2, "beskrivelse": "Andre utfall", "testresultat": "brot", "default": false}
+        ]
+      }
+      """
+        .trimIndent()
+
+    val id =
+      createTestregel(
+        TestregelInit(
+          testregelId = "MANUELL-FORENKLA-1",
+          namn = "manuell_forenkla_testregel",
+          kravId = testregelTestKravId,
+          status = TestregelStatus.publisert,
+          type = TestregelInnholdstype.nett,
+          modus = TestregelModus.manuellForenkla,
+          spraak = TestlabLocale.nb,
+          testregelSchema = schemaWithUtfall,
+          innhaldstypeTesting = 1,
+          tema = 1,
+          testobjekt = 1,
+          kravTilSamsvar = ""))
+
+    val created = testregelDAO.getTestregel(id)
+    Assertions.assertThat(created).isNotNull
+    Assertions.assertThat(created?.modus).isEqualTo(TestregelModus.manuellForenkla)
+
+    val createdDefinition = created?.definition as ManuellForenklaTestregelDefinition
+    Assertions.assertThat(createdDefinition.utfall).hasSize(2)
+    Assertions.assertThat(createdDefinition.utfall.map { it.beskrivelse })
+      .containsExactly("Fyrste utfall", "Andre utfall")
+
+    val updated =
+      created!!.copy(
+        testregelSchema = "{\"utfall\": []}",
+        definition =
+          ManuellForenklaTestregelDefinition(
+            description = "oppdatert",
+            utfall =
+              listOf(
+                TestregelUtfall(
+                  id = 10,
+                  beskrivelse = "Oppdatert utfall",
+                  testresultat = TestresultatUtfall.varsel,
+                  default = true))))
+
+    testregelDAO.updateTestregel(updated)
+
+    val fetchedAfterUpdate = testregelDAO.getTestregel(id)
+    val updatedDefinition = fetchedAfterUpdate?.definition as ManuellForenklaTestregelDefinition
+    Assertions.assertThat(updatedDefinition.utfall).hasSize(1)
+    Assertions.assertThat(updatedDefinition.utfall.first().beskrivelse)
+      .isEqualTo("Oppdatert utfall")
+    Assertions.assertThat(updatedDefinition.utfall.first().testresultat)
+      .isEqualTo(TestresultatUtfall.varsel)
+
+    assertDoesNotThrow { testregelDAO.deleteTestregel(id) }
+    Assertions.assertThat(testregelDAO.getTestregel(id)).isNull()
   }
 
   private fun createTestregel(

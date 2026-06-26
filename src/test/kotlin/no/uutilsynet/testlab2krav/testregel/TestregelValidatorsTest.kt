@@ -9,6 +9,7 @@ import no.uutilsynet.testlab2krav.testregel.TestConstants.name
 import no.uutilsynet.testlab2krav.testregel.TestConstants.testregelSchemaAutomatisk
 import no.uutilsynet.testlab2krav.testregel.TestConstants.testregelSchemaManuell
 import no.uutilsynet.testlab2krav.testregel.TestConstants.testregelTestKravId
+import no.uutilsynet.testlab2krav.testregel.model.StringTestregelDefinition
 import no.uutilsynet.testlab2krav.testregel.model.Testregel
 import no.uutilsynet.testlab2krav.testregel.model.Testregel.Companion.validateTestregel
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -39,7 +40,8 @@ class TestregelValidatorsTest {
           1,
           "",
           testregelSchemaAutomatisk,
-          1)
+          1,
+          StringTestregelDefinition("test"))
         .validateTestregel()
     }
   }
@@ -63,14 +65,15 @@ class TestregelValidatorsTest {
           1,
           "",
           testregelSchemaManuell,
-          1)
+          1,
+          StringTestregelDefinition("test"))
         .validateTestregel()
     }
   }
 
   @Nested
   @DisplayName("For validering av testregel-objektet skal ")
-  inner class invalidTestregelRapport {
+  inner class InvalidTestregelRapport {
 
     @Test
     @DisplayName("ugyldig namn feile")
@@ -91,7 +94,8 @@ class TestregelValidatorsTest {
           1,
           "",
           testregelSchemaAutomatisk,
-          1)
+          1,
+          StringTestregelDefinition("test"))
       assertTrue(testregel.validateTestregel().isFailure)
     }
 
@@ -114,7 +118,8 @@ class TestregelValidatorsTest {
           1,
           "",
           "",
-          1)
+          1,
+          StringTestregelDefinition("test"))
       assertTrue(testregel.validateTestregel().isFailure)
     }
 
@@ -137,7 +142,8 @@ class TestregelValidatorsTest {
           1,
           "",
           "",
-          1)
+          1,
+          StringTestregelDefinition("test"))
       assertTrue(testregel.validateTestregel().isFailure)
     }
   }
