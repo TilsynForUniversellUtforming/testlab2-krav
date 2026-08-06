@@ -1,16 +1,16 @@
 package no.uutilsynet.testlab2krav.testregel
 
 import java.time.Instant
+import no.uutilsynet.testlab2.constants.ManuellForenklaTestregelDefinition
 import no.uutilsynet.testlab2.constants.TestlabLocale
 import no.uutilsynet.testlab2.constants.TestregelInnholdstype
 import no.uutilsynet.testlab2.constants.TestregelModus
 import no.uutilsynet.testlab2.constants.TestregelStatus
+import no.uutilsynet.testlab2.constants.TestregelUtfall
 import no.uutilsynet.testlab2.constants.TestresultatUtfall
 import no.uutilsynet.testlab2krav.dao.KravDAO
 import no.uutilsynet.testlab2krav.testregel.import.TestregelImportService
-import no.uutilsynet.testlab2krav.testregel.model.ManuellForenklaTestregelDefinition
 import no.uutilsynet.testlab2krav.testregel.model.Testregel
-import no.uutilsynet.testlab2krav.testregel.model.TestregelUtfall
 import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito

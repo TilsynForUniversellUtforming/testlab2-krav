@@ -92,7 +92,7 @@ class TestregelResource(
     }
 
   @DeleteMapping("{testregelId}")
-  fun deleteTestregel(@PathVariable("testregelId") testregelId: Int): ResponseEntity<out Any> =
+  fun deleteTestregel(@PathVariable testregelId: Int): ResponseEntity<out Any> =
     executeWithErrorHandling {
       testregelService.deleteTestregel(testregelId)
     }

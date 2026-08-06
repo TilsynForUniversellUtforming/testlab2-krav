@@ -7,7 +7,6 @@ import no.uutilsynet.testlab2krav.dao.KravDAO
 import no.uutilsynet.testlab2krav.dto.KravWcag2x
 import no.uutilsynet.testlab2krav.testregel.import.TestregelImportService
 import no.uutilsynet.testlab2krav.testregel.model.InnhaldstypeTesting
-import no.uutilsynet.testlab2krav.testregel.model.StringTestregelDefinition
 import no.uutilsynet.testlab2krav.testregel.model.Tema
 import no.uutilsynet.testlab2krav.testregel.model.Testobjekt
 import no.uutilsynet.testlab2krav.testregel.model.Testregel

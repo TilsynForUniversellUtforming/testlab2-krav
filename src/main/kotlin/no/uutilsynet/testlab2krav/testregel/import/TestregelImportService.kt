@@ -6,13 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import java.nio.charset.Charset
 import java.time.Instant
 import java.util.*
+import no.uutilsynet.testlab2.constants.StringTestregelDefinition
 import no.uutilsynet.testlab2.constants.TestlabLocale
 import no.uutilsynet.testlab2.constants.TestregelInnholdstype
 import no.uutilsynet.testlab2.constants.TestregelModus
 import no.uutilsynet.testlab2.constants.TestregelStatus
 import no.uutilsynet.testlab2krav.dao.KravDAO
 import no.uutilsynet.testlab2krav.testregel.TestregelDAO
-import no.uutilsynet.testlab2krav.testregel.model.StringTestregelDefinition
 import no.uutilsynet.testlab2krav.testregel.model.Testregel
 import no.uutilsynet.testlab2krav.testregel.model.TestregelInit
 import org.slf4j.LoggerFactory
@@ -198,7 +198,8 @@ class TestregelImportService(
       testobjekt = 1,
       kravTilSamsvar = testregelMeta.kravTilSamsvar,
       testregelSchema = githubSource,
-      innhaldstypeTesting = 1)
+      innhaldstypeTesting = 1,
+      definition = StringTestregelDefinition(githubSource))
   }
 
   fun extractKrav(testregelId: String): String {

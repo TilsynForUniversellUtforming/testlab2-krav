@@ -2,6 +2,9 @@ package no.uutilsynet.testlab2krav.testregel.model
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import java.time.Instant
+import no.uutilsynet.testlab2.constants.ITestregelDefinition
+import no.uutilsynet.testlab2.constants.QualwebTestregelDefinition
+import no.uutilsynet.testlab2.constants.StringTestregelDefinition
 import no.uutilsynet.testlab2.constants.TestlabLocale
 import no.uutilsynet.testlab2.constants.TestregelInnholdstype
 import no.uutilsynet.testlab2.constants.TestregelModus

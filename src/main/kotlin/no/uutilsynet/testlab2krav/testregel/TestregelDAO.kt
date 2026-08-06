@@ -4,10 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import java.sql.Timestamp
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import no.uutilsynet.testlab2.constants.ManuellForenklaTestregelDefinition
+import no.uutilsynet.testlab2.constants.StringTestregelDefinition
 import no.uutilsynet.testlab2.constants.TestlabLocale
 import no.uutilsynet.testlab2.constants.TestregelInnholdstype
 import no.uutilsynet.testlab2.constants.TestregelModus
 import no.uutilsynet.testlab2.constants.TestregelStatus
+import no.uutilsynet.testlab2.constants.TestregelUtfall
 import no.uutilsynet.testlab2.constants.TestresultatUtfall
 import no.uutilsynet.testlab2krav.testregel.TestregelDAO.TestregelParams.deleteTestregelSql
 import no.uutilsynet.testlab2krav.testregel.TestregelDAO.TestregelParams.getTestregelByTestregelId
@@ -16,13 +19,10 @@ import no.uutilsynet.testlab2krav.testregel.TestregelDAO.TestregelParams.getTest
 import no.uutilsynet.testlab2krav.testregel.TestregelDAO.TestregelParams.getTestregelSql
 import no.uutilsynet.testlab2krav.testregel.TestregelDAO.TestregelParams.updateTestregel
 import no.uutilsynet.testlab2krav.testregel.model.InnhaldstypeTesting
-import no.uutilsynet.testlab2krav.testregel.model.ManuellForenklaTestregelDefinition
-import no.uutilsynet.testlab2krav.testregel.model.StringTestregelDefinition
 import no.uutilsynet.testlab2krav.testregel.model.Tema
 import no.uutilsynet.testlab2krav.testregel.model.Testobjekt
 import no.uutilsynet.testlab2krav.testregel.model.Testregel
 import no.uutilsynet.testlab2krav.testregel.model.TestregelInit
-import no.uutilsynet.testlab2krav.testregel.model.TestregelUtfall
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.dao.support.DataAccessUtils

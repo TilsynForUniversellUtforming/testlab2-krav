@@ -1,6 +1,7 @@
 package no.uutilsynet.testlab2krav.testregel
 
 import java.time.Instant
+import no.uutilsynet.testlab2.constants.StringTestregelDefinition
 import no.uutilsynet.testlab2.constants.TestlabLocale
 import no.uutilsynet.testlab2.constants.TestregelInnholdstype
 import no.uutilsynet.testlab2.constants.TestregelModus
@@ -9,7 +10,6 @@ import no.uutilsynet.testlab2krav.testregel.TestConstants.name
 import no.uutilsynet.testlab2krav.testregel.TestConstants.testregelSchemaAutomatisk
 import no.uutilsynet.testlab2krav.testregel.TestConstants.testregelSchemaManuell
 import no.uutilsynet.testlab2krav.testregel.TestConstants.testregelTestKravId
-import no.uutilsynet.testlab2krav.testregel.model.StringTestregelDefinition
 import no.uutilsynet.testlab2krav.testregel.model.Testregel
 import no.uutilsynet.testlab2krav.testregel.model.Testregel.Companion.validateTestregel
 import org.junit.jupiter.api.Assertions.assertTrue

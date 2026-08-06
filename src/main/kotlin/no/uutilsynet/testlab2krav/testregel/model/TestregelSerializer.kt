@@ -4,6 +4,10 @@ import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
+import no.uutilsynet.testlab2.constants.ITestregelDefinition
+import no.uutilsynet.testlab2.constants.ManuellForenklaTestregelDefinition
+import no.uutilsynet.testlab2.constants.QualwebTestregelDefinition
+import no.uutilsynet.testlab2.constants.StringTestregelDefinition
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
