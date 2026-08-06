@@ -21,5 +21,5 @@ data class TestregelInit(
   val kravTilSamsvar: String?,
   val testregelSchema: String,
   val innhaldstypeTesting: Int?,
-  val definition: ITestregelDefinition
+  val definition: ITestregelDefinition?
 )
