@@ -1,7 +1,7 @@
 package no.uutilsynet.testlab2krav.testregel.model
 
-import no.uutilsynet.testlab2.constants.ITestregelDefinition
 import java.time.Instant
+import no.uutilsynet.testlab2.constants.ITestregelDefinition
 import no.uutilsynet.testlab2.constants.TestlabLocale
 import no.uutilsynet.testlab2.constants.TestregelInnholdstype
 import no.uutilsynet.testlab2.constants.TestregelModus

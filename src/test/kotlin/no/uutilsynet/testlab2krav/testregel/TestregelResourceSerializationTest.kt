@@ -11,6 +11,7 @@ import no.uutilsynet.testlab2.constants.TestresultatUtfall
 import no.uutilsynet.testlab2krav.dao.KravDAO
 import no.uutilsynet.testlab2krav.testregel.import.TestregelImportService
 import no.uutilsynet.testlab2krav.testregel.model.Testregel
+import no.uutilsynet.testlab2krav.testregel.model.TestregelSerializer
 import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
@@ -35,6 +36,7 @@ class TestregelResourceSerializationTest {
   @MockitoBean lateinit var testregelService: TestregelService
   @MockitoBean lateinit var kravDAO: KravDAO
   @MockitoBean lateinit var testregelImportService: TestregelImportService
+  @MockitoBean lateinit var testregelSerializer: TestregelSerializer
 
   @TestConfiguration
   class WebMvcTestConfig {
@@ -78,7 +80,7 @@ class TestregelResourceSerializationTest {
       .andExpect(status().isOk)
       .andExpect(jsonPath("$.id").value(42))
       .andExpect(jsonPath("$.testregelId").value("MANUELL-FORENKLA-42"))
-      .andExpect(jsonPath("$.modus").value("manuellForenkla"))
+      .andExpect(jsonPath("$.modus").value("manuell-forenkla"))
       .andExpect(jsonPath("$.definition.description").value("Forenkla definisjon"))
       .andExpect(jsonPath("$.definition.utfall", hasSize<Any>(1)))
       .andExpect(jsonPath("$.definition.utfall[0].beskrivelse").value("Alt ok"))
