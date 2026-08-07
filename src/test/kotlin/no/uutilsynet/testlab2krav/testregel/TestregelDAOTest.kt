@@ -46,6 +46,7 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val
   fun getTestregelList() {
     val id = createTestregel()
     val testregel = testregelDAO.getTestregel(id)
+    Assertions.assertThat(testregel!!.id).isEqualTo(id)
     val list = testregelDAO.getTestregelList()
 
     Assertions.assertThat(list).contains(testregel)
