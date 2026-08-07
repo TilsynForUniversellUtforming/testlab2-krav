@@ -1,7 +1,10 @@
 package no.uutilsynet.testlab2krav
 
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import no.uutilsynet.testlab2krav.testregel.model.Testregel
+import no.uutilsynet.testlab2krav.testregel.model.TestregelSerializer
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
@@ -20,13 +23,21 @@ import org.springframework.web.client.RestTemplate
 class Testlab2KravApplication {
 
   @Bean
-  fun restTemplate(restTemplateBuilder: RestTemplateBuilder): RestTemplate {
+  fun restTemplate(
+    restTemplateBuilder: RestTemplateBuilder,
+    testregelSerializer: TestregelSerializer
+  ): RestTemplate {
     val objectMapper =
       jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+
     val mappingJackson2HttpMessageConverter = MappingJackson2HttpMessageConverter()
     mappingJackson2HttpMessageConverter.objectMapper = objectMapper
     mappingJackson2HttpMessageConverter.supportedMediaTypes =
       listOf(MediaType.APPLICATION_JSON, MediaType.APPLICATION_OCTET_STREAM)
+
+    val module = SimpleModule()
+    module.addSerializer(Testregel::class.java, testregelSerializer)
+    objectMapper.registerModule(module)
 
     return restTemplateBuilder.messageConverters(mappingJackson2HttpMessageConverter).build()
   }

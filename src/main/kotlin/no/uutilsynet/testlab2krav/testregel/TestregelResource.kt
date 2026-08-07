@@ -92,7 +92,7 @@ class TestregelResource(
     }
 
   @DeleteMapping("{testregelId}")
-  fun deleteTestregel(@PathVariable("testregelId") testregelId: Int): ResponseEntity<out Any> =
+  fun deleteTestregel(@PathVariable testregelId: Int): ResponseEntity<out Any> =
     executeWithErrorHandling {
       testregelService.deleteTestregel(testregelId)
     }
@@ -160,7 +160,8 @@ class TestregelResource(
         datoSistEndra = testregel.datoSistEndra,
         type = testregel.type,
         spraak = testregel.spraak,
-        kravTilSamsvar = testregel.kravTilSamsvar)
+        kravTilSamsvar = testregel.kravTilSamsvar,
+        definition = testregel.definition)
     }
   }
 
@@ -200,7 +201,8 @@ class TestregelResource(
             datoSistEndra = testregel.datoSistEndra,
             type = testregel.type,
             spraak = testregel.spraak,
-            kravTilSamsvar = testregel.kravTilSamsvar))
+            kravTilSamsvar = testregel.kravTilSamsvar,
+            definition = testregel.definition))
       }
       .getOrElse {
         logger.error(ERROR_GET_TESTREGLAR, it)

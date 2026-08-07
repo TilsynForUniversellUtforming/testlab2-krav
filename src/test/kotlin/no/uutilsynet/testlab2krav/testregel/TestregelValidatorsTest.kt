@@ -1,6 +1,7 @@
 package no.uutilsynet.testlab2krav.testregel
 
 import java.time.Instant
+import no.uutilsynet.testlab2.constants.StringTestregelDefinition
 import no.uutilsynet.testlab2.constants.TestlabLocale
 import no.uutilsynet.testlab2.constants.TestregelInnholdstype
 import no.uutilsynet.testlab2.constants.TestregelModus
@@ -39,7 +40,8 @@ class TestregelValidatorsTest {
           1,
           "",
           testregelSchemaAutomatisk,
-          1)
+          1,
+          StringTestregelDefinition("test"))
         .validateTestregel()
     }
   }
@@ -63,14 +65,15 @@ class TestregelValidatorsTest {
           1,
           "",
           testregelSchemaManuell,
-          1)
+          1,
+          StringTestregelDefinition("test"))
         .validateTestregel()
     }
   }
 
   @Nested
   @DisplayName("For validering av testregel-objektet skal ")
-  inner class invalidTestregelRapport {
+  inner class InvalidTestregelRapport {
 
     @Test
     @DisplayName("ugyldig namn feile")
@@ -91,7 +94,8 @@ class TestregelValidatorsTest {
           1,
           "",
           testregelSchemaAutomatisk,
-          1)
+          1,
+          StringTestregelDefinition("test"))
       assertTrue(testregel.validateTestregel().isFailure)
     }
 
@@ -114,7 +118,8 @@ class TestregelValidatorsTest {
           1,
           "",
           "",
-          1)
+          1,
+          StringTestregelDefinition("test"))
       assertTrue(testregel.validateTestregel().isFailure)
     }
 
@@ -137,7 +142,8 @@ class TestregelValidatorsTest {
           1,
           "",
           "",
-          1)
+          1,
+          StringTestregelDefinition("test"))
       assertTrue(testregel.validateTestregel().isFailure)
     }
   }

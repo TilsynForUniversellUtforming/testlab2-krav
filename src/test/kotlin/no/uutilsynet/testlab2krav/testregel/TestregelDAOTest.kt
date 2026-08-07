@@ -1,17 +1,15 @@
 package no.uutilsynet.testlab2krav.testregel
 
-import java.net.URI
 import java.time.Instant
-import no.uutilsynet.testlab2.constants.KravStatus
+import no.uutilsynet.testlab2.constants.ManuellForenklaTestregelDefinition
+import no.uutilsynet.testlab2.constants.StringTestregelDefinition
 import no.uutilsynet.testlab2.constants.TestlabLocale
 import no.uutilsynet.testlab2.constants.TestregelInnholdstype
 import no.uutilsynet.testlab2.constants.TestregelModus
 import no.uutilsynet.testlab2.constants.TestregelStatus
-import no.uutilsynet.testlab2.constants.WcagPrinsipp
-import no.uutilsynet.testlab2.constants.WcagRetninglinje
-import no.uutilsynet.testlab2.constants.WcagSamsvarsnivaa
+import no.uutilsynet.testlab2.constants.TestregelUtfall
+import no.uutilsynet.testlab2.constants.TestresultatUtfall
 import no.uutilsynet.testlab2krav.dao.KravDAO
-import no.uutilsynet.testlab2krav.dto.KravInit
 import no.uutilsynet.testlab2krav.testregel.TestConstants.name
 import no.uutilsynet.testlab2krav.testregel.TestConstants.testregelSchemaAutomatisk
 import no.uutilsynet.testlab2krav.testregel.TestConstants.testregelTestKravId
@@ -48,6 +46,7 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val
   fun getTestregelList() {
     val id = createTestregel()
     val testregel = testregelDAO.getTestregel(id)
+    Assertions.assertThat(testregel!!.id).isEqualTo(id)
     val list = testregelDAO.getTestregelList()
 
     Assertions.assertThat(list).contains(testregel)
@@ -90,7 +89,8 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val
         innhaldstypeTesting = 1,
         tema = 1,
         testobjekt = 1,
-        kravTilSamsvar = "")
+        kravTilSamsvar = "",
+        definition = StringTestregelDefinition(""))
     val id = createTestregel(testregelInit)
 
     val oldTestregel = testregelDAO.getTestregel(id)
@@ -126,7 +126,8 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val
         innhaldstypeTesting = 1,
         tema = 1,
         testobjekt = 1,
-        kravTilSamsvar = "")
+        kravTilSamsvar = "",
+        definition = StringTestregelDefinition(""))
     val id = createTestregel(testregelInit)
 
     val oldTestregel = testregelDAO.getTestregel(id)
@@ -152,6 +153,74 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val
     Assertions.assertThat(newDate).isAfter(oldDate)
   }
 
+  @Test
+  @DisplayName("Skal handtere testregel_utfall for manuell-forenkla testregel")
+  fun crudTestregelUtfallForManuellForenkla() {
+    val schemaWithUtfall =
+      """
+      {
+        "utfall": [
+          {"id": 1, "beskrivelse": "Fyrste utfall", "testresultat": "samsvar", "default": true},
+          {"id": 2, "beskrivelse": "Andre utfall", "testresultat": "brot", "default": false}
+        ]
+      }
+      """
+        .trimIndent()
+
+    val id =
+      createTestregel(
+        TestregelInit(
+          testregelId = "MANUELL-FORENKLA-1",
+          namn = "manuell_forenkla_testregel",
+          kravId = testregelTestKravId,
+          status = TestregelStatus.publisert,
+          type = TestregelInnholdstype.nett,
+          modus = TestregelModus.manuellForenkla,
+          spraak = TestlabLocale.nb,
+          testregelSchema = schemaWithUtfall,
+          innhaldstypeTesting = 1,
+          tema = 1,
+          testobjekt = 1,
+          kravTilSamsvar = "",
+          definition = StringTestregelDefinition("")))
+
+    val created = testregelDAO.getTestregel(id)
+    Assertions.assertThat(created).isNotNull
+    Assertions.assertThat(created?.modus).isEqualTo(TestregelModus.manuellForenkla)
+
+    val createdDefinition = created?.definition as ManuellForenklaTestregelDefinition
+    Assertions.assertThat(createdDefinition.utfall).hasSize(2)
+    Assertions.assertThat(createdDefinition.utfall.map { it.beskrivelse })
+      .containsExactly("Fyrste utfall", "Andre utfall")
+
+    val updated =
+      created.copy(
+        testregelSchema = "{\"utfall\": []}",
+        definition =
+          ManuellForenklaTestregelDefinition(
+            description = "oppdatert",
+            utfall =
+              listOf(
+                TestregelUtfall(
+                  id = 10,
+                  beskrivelse = "Oppdatert utfall",
+                  testresultat = TestresultatUtfall.varsel,
+                  default = true))))
+
+    testregelDAO.updateTestregel(updated)
+
+    val fetchedAfterUpdate = testregelDAO.getTestregel(id)
+    val updatedDefinition = fetchedAfterUpdate?.definition as ManuellForenklaTestregelDefinition
+    Assertions.assertThat(updatedDefinition.utfall).hasSize(1)
+    Assertions.assertThat(updatedDefinition.utfall.first().beskrivelse)
+      .isEqualTo("Oppdatert utfall")
+    Assertions.assertThat(updatedDefinition.utfall.first().testresultat)
+      .isEqualTo(TestresultatUtfall.varsel)
+
+    assertDoesNotThrow { testregelDAO.deleteTestregel(id) }
+    Assertions.assertThat(testregelDAO.getTestregel(id)).isNull()
+  }
+
   private fun createTestregel(
     testregelInit: TestregelInit =
       TestregelInit(
@@ -166,30 +235,11 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val
         innhaldstypeTesting = 1,
         tema = 1,
         testobjekt = 1,
-        kravTilSamsvar = "")
+        kravTilSamsvar = "",
+        definition = StringTestregelDefinition(""))
   ): Int {
 
     val id = testregelDAO.createTestregel(testregelInit).also { deleteThese.add(it) }
     return id
-  }
-
-  private fun createKrav(): Int {
-    val wcagKrav: KravInit =
-      KravInit(
-        tittel = "1.1.1 Ikke-tekstlig innhold",
-        status = KravStatus.gjeldande,
-        innhald =
-          "Alt ikke-tekstlig innhold som presenteres for brukere av en teknologi, skal ha en tekstlig ekvivalent som tjener tilsvarende formål,",
-        gjeldAutomat = true,
-        gjeldNettsider = true,
-        gjeldApp = true,
-        prinsipp = WcagPrinsipp.robust,
-        retningslinje = WcagRetninglinje.leselig,
-        suksesskriterium = "1.1.1",
-        samsvarsnivaa = WcagSamsvarsnivaa.A,
-        kommentarBrudd = "Manglende tekstalternativ for bilder",
-        urlRettleiing = URI("https://www.w3.org/TR/WCAG20/#text-equiv").toURL())
-
-    return kravDAO.createWcagKrav(wcagKrav)
   }
 }

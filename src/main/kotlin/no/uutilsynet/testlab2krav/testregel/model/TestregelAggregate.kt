@@ -1,6 +1,7 @@
 package no.uutilsynet.testlab2krav.testregel.model
 
 import java.time.Instant
+import no.uutilsynet.testlab2.constants.ITestregelDefinition
 import no.uutilsynet.testlab2.constants.TestlabLocale
 import no.uutilsynet.testlab2.constants.TestregelInnholdstype
 import no.uutilsynet.testlab2.constants.TestregelModus
@@ -22,5 +23,6 @@ data class TestregelAggregate(
   val testobjekt: Testobjekt?,
   val kravTilSamsvar: String?,
   val testregelSchema: String,
-  val innhaldstypeTesting: InnhaldstypeTesting?
+  val innhaldstypeTesting: InnhaldstypeTesting?,
+  val definition: ITestregelDefinition
 )

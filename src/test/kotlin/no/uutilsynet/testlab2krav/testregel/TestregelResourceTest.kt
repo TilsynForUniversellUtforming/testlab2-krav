@@ -42,7 +42,8 @@ class TestregelResourceTest {
         kravTilSamsvar = "svar",
         tema = 2,
         testobjekt = 3,
-        innhaldstypeTesting = 4)
+        innhaldstypeTesting = 4,
+        definition = StringTestregelDefinition("schema"))
     val tema = Tema(id = 2, tema = "Tema")
     val testobjekt = Testobjekt(id = 3, testobjekt = "Objekt")
     val innhaldstype = InnhaldstypeTesting(id = 4, innhaldstype = "Innhald")

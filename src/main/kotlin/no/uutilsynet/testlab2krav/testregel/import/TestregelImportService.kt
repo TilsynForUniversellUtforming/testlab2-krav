@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import java.nio.charset.Charset
 import java.time.Instant
 import java.util.*
+import no.uutilsynet.testlab2.constants.StringTestregelDefinition
 import no.uutilsynet.testlab2.constants.TestlabLocale
 import no.uutilsynet.testlab2.constants.TestregelInnholdstype
 import no.uutilsynet.testlab2.constants.TestregelModus
@@ -197,7 +198,8 @@ class TestregelImportService(
       testobjekt = 1,
       kravTilSamsvar = testregelMeta.kravTilSamsvar,
       testregelSchema = githubSource,
-      innhaldstypeTesting = 1)
+      innhaldstypeTesting = 1,
+      definition = StringTestregelDefinition(githubSource))
   }
 
   fun extractKrav(testregelId: String): String {
@@ -255,7 +257,7 @@ class TestregelImportService(
           kravTilSamsvar = testregel.kravTilSamsvar,
           innhaldstypeTesting = existing.innhaldstypeTesting,
           datoSistEndra = Instant.now(),
-        )
+          definition = StringTestregelDefinition(existing.testregelSchema))
 
       testregelDAO.updateTestregel(updated)
     } else {

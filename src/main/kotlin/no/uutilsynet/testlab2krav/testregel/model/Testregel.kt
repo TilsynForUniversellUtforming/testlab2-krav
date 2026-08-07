@@ -1,6 +1,10 @@
 package no.uutilsynet.testlab2krav.testregel.model
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import java.time.Instant
+import no.uutilsynet.testlab2.constants.ITestregelDefinition
+import no.uutilsynet.testlab2.constants.QualwebTestregelDefinition
+import no.uutilsynet.testlab2.constants.StringTestregelDefinition
 import no.uutilsynet.testlab2.constants.TestlabLocale
 import no.uutilsynet.testlab2.constants.TestregelInnholdstype
 import no.uutilsynet.testlab2.constants.TestregelModus
@@ -10,6 +14,7 @@ import no.uutilsynet.testlab2.validators.validateTestregelId
 import no.uutilsynet.testlab2krav.dto.KravWcag2x
 import no.uutilsynet.testlab2krav.testregel.validateSchema
 
+@JsonSerialize(using = TestregelSerializer::class)
 data class Testregel(
   val id: Int,
   val testregelId: String,
@@ -26,12 +31,22 @@ data class Testregel(
   val kravTilSamsvar: String?,
   val testregelSchema: String,
   val innhaldstypeTesting: Int?,
+  var definition: ITestregelDefinition
 ) {
+  init {
+    if (modus == TestregelModus.automatisk) {
+      definition = QualwebTestregelDefinition(testregelSchema)
+    } else if (modus != TestregelModus.manuellForenkla) {
+      definition = StringTestregelDefinition(testregelSchema)
+    }
+  }
+
   companion object {
     fun Testregel.validateTestregel(): Result<Testregel> = runCatching {
       val name = validateNamn(this.namn).getOrThrow()
       val testregelId = validateTestregelId(this.testregelId).getOrThrow()
       val schema = validateSchema(this.testregelSchema, this.modus).getOrThrow()
+      val definition = StringTestregelDefinition(schema)
 
       Testregel(
         this.id,
@@ -48,7 +63,8 @@ data class Testregel(
         this.testobjekt,
         this.kravTilSamsvar,
         schema,
-        this.innhaldstypeTesting)
+        this.innhaldstypeTesting,
+        definition)
     }
   }
 }
