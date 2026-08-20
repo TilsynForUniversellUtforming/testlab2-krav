@@ -65,6 +65,7 @@ class TestregelResourceSerializationTest {
         definition =
           ManuellForenklaTestregelDefinition(
             description = "Forenkla definisjon",
+            helptext = "Helpetekst",
             utfall =
               listOf(
                 TestregelUtfall(
