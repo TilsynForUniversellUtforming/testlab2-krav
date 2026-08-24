@@ -44,22 +44,22 @@ class TestregelDAO(
   object TestregelParams {
 
     val getTestregelListSql =
-      """select id, testregel_id,versjon,namn, krav_id, status, dato_sist_endra,type , modus ,spraak,tema,testobjekt,krav_til_samsvar,testregel_schema, innhaldstype_testing  
+      """select id, testregel_id,versjon,namn, krav_id, status, dato_sist_endra,type , modus ,spraak,tema,testobjekt,krav_til_samsvar,testregel_schema, innhaldstype_testing, helptext 
         |from "testlab2_krav"."testregel" order by id"""
         .trimMargin()
 
     val getTestregelListByIdList =
-      """select id, testregel_id,versjon,namn, krav_id, status, dato_sist_endra,type , modus ,spraak,tema,testobjekt,krav_til_samsvar,testregel_schema, innhaldstype_testing  
+      """select id, testregel_id,versjon,namn, krav_id, status, dato_sist_endra,type , modus ,spraak,tema,testobjekt,krav_til_samsvar,testregel_schema, innhaldstype_testing, helptext  
         |from "testlab2_krav"."testregel" where id in (:ids) order by id"""
         .trimMargin()
 
     val getTestregelSql =
-      """select id, testregel_id,versjon,namn, krav_id, status, dato_sist_endra,type, modus ,spraak,tema,testobjekt,krav_til_samsvar,testregel_schema, innhaldstype_testing 
+      """select id, testregel_id,versjon,namn, krav_id, status, dato_sist_endra,type, modus ,spraak,tema,testobjekt,krav_til_samsvar,testregel_schema, innhaldstype_testing,helptext 
         |from "testlab2_krav"."testregel" where id = :id order by id"""
         .trimMargin()
 
     val getTestregelByTestregelId =
-      """select id, testregel_id,versjon,namn, krav_id, status, dato_sist_endra,type, modus ,spraak,tema,testobjekt,krav_til_samsvar,testregel_schema, innhaldstype_testing 
+      """select id, testregel_id,versjon,namn, krav_id, status, dato_sist_endra,type, modus ,spraak,tema,testobjekt,krav_til_samsvar,testregel_schema, innhaldstype_testing,helptext 
         |from "testlab2_krav"."testregel" 
         |where testregel_id = :testregelId 
         |and versjon=(
@@ -90,7 +90,7 @@ class TestregelDAO(
 
     val updateTestregel =
       """ update "testlab2_krav"."testregel" set namn = :namn, testregel_id = :testregel_id,krav_id = :krav_id, versjon = :versjon,status = :status, dato_sist_endra = :dato_sist_endra, type = :type, modus = :modus,
-                spraak = :spaak, tema = :tema, testobjekt = :testobjekt, krav_til_samsvar = :krav_til_samsvar , testregel_schema = :testregel_schema, innhaldstype_testing = :innhaldstype_testing 
+                spraak = :spaak, tema = :tema, testobjekt = :testobjekt, krav_til_samsvar = :krav_til_samsvar , testregel_schema = :testregel_schema, innhaldstype_testing = :innhaldstype_testing, helptext = :helptext 
                 where id = :id"""
         .trimMargin()
   }
@@ -103,8 +103,9 @@ class TestregelDAO(
 
       val definition =
         if (modus == TestregelModus.manuellForenkla) {
+          val helptext = rs.getString("helptext") ?: ""
           ManuellForenklaTestregelDefinition(
-            description = schema, utfall = getTestregelUtfallForTestregel(id))
+            description = schema, utfall = getTestregelUtfallForTestregel(id), helptext = helptext)
         } else {
           StringTestregelDefinition(schema)
         }
@@ -179,6 +180,8 @@ class TestregelDAO(
     params.addValue("testobjekt", testregelInit.testobjekt)
     params.addValue("krav_til_samsvar", testregelInit.kravTilSamsvar)
     params.addValue("innhaldstype_testing", testregelInit.innhaldstypeTesting)
+    params.addValue(
+      "helptext", (testregelInit.definition as? ManuellForenklaTestregelDefinition)?.helptext)
 
     jdbcTemplate.update(
       """
@@ -197,7 +200,8 @@ class TestregelDAO(
               type,
               testobjekt,
               krav_til_samsvar,
-              innhaldstype_testing
+              innhaldstype_testing,
+              helptext
             ) values (
               :krav_id,
               :testregel_schema,
@@ -212,7 +216,8 @@ class TestregelDAO(
               :type,
               :testobjekt,
               :krav_til_samsvar,
-              :innhaldstype_testing
+              :innhaldstype_testing,
+              :helptext
             ) 
         """
         .trimIndent(),
@@ -257,7 +262,8 @@ class TestregelDAO(
           "testobjekt" to testregel.testobjekt,
           "krav_til_samsvar" to testregel.kravTilSamsvar,
           "testregel_schema" to testregel.testregelSchema,
-          "innhaldstype_testing" to (testregel.innhaldstypeTesting)))
+          "innhaldstype_testing" to testregel.innhaldstypeTesting,
+          "helptext" to (testregel.definition as? ManuellForenklaTestregelDefinition)?.helptext))
       .also {
         if (testregel.modus == TestregelModus.manuellForenkla) {
           replaceTestregelUtfall(testregel.id, extractUtfallForDefinition(testregel))

@@ -68,6 +68,7 @@ class TestregelSerializerTest {
         definition =
           ManuellForenklaTestregelDefinition(
             description = "forenkla",
+            helptext = "helptext",
             utfall =
               listOf(
                 TestregelUtfall(

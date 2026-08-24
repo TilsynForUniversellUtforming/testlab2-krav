@@ -199,13 +199,15 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val
         definition =
           ManuellForenklaTestregelDefinition(
             description = "oppdatert",
+            helptext = "oppdatert",
             utfall =
               listOf(
                 TestregelUtfall(
                   id = 10,
                   beskrivelse = "Oppdatert utfall",
                   testresultat = TestresultatUtfall.varsel,
-                  default = true))))
+                  default = true))),
+      )
 
     testregelDAO.updateTestregel(updated)
 
