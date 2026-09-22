@@ -1,6 +1,5 @@
  package no.uutilsynet.testlab2krav.testregel
 
- import java.net.URI
  import no.uutilsynet.testlab2.constants.KravStatus
  import no.uutilsynet.testlab2.constants.WcagPrinsipp
  import no.uutilsynet.testlab2.constants.WcagRetninglinje
@@ -21,11 +20,11 @@
  import org.springframework.test.context.ActiveProfiles
  import org.springframework.test.context.bean.override.mockito.MockitoBean
  import org.springframework.test.context.junit.jupiter.SpringJUnitConfig
- import org.springframework.test.web.reactive.server.WebTestClient
  import org.springframework.test.web.servlet.client.RestTestClient
  import org.springframework.test.web.servlet.client.expectBody
  import org.springframework.test.web.servlet.client.returnResult
  import org.springframework.web.context.WebApplicationContext
+ import java.net.URI
 
  @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
