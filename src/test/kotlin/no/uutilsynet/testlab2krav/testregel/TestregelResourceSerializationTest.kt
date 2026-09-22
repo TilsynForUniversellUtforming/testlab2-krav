@@ -1,6 +1,5 @@
 package no.uutilsynet.testlab2krav.testregel
 
-import java.time.Instant
 import no.uutilsynet.testlab2.constants.ManuellForenklaTestregelDefinition
 import no.uutilsynet.testlab2.constants.TestlabLocale
 import no.uutilsynet.testlab2.constants.TestregelInnholdstype
@@ -16,19 +15,15 @@ import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.restclient.RestTemplateBuilder
-import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Import
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.Instant
 
 @WebMvcTest(TestregelResource::class)
-@Import(TestregelResourceSerializationTest.WebMvcTestConfig::class)
 class TestregelResourceSerializationTest {
 
   @Autowired private lateinit var mockMvc: MockMvc
@@ -37,11 +32,6 @@ class TestregelResourceSerializationTest {
   @MockitoBean lateinit var kravDAO: KravDAO
   @MockitoBean lateinit var testregelImportService: TestregelImportService
   @MockitoBean lateinit var testregelSerializer: TestregelSerializer
-
-  @TestConfiguration
-  class WebMvcTestConfig {
-    @Bean fun restTemplateBuilder(): RestTemplateBuilder = RestTemplateBuilder()
-  }
 
   @Test
   fun `getTestregel returns serialized manuellForenkla definition`() {

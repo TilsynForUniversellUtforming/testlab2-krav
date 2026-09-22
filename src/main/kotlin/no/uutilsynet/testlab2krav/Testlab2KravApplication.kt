@@ -16,15 +16,8 @@ import tools.jackson.databind.json.JsonMapper
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
-@EnableCaching
 class Testlab2KravApplication {
 
-  @Bean
-  fun restTemplate(
-      restTemplateBuilder: RestTemplateBuilder,
-  ): RestTemplate {
-    return restTemplateBuilder.build()
-  }
 
   @Bean
   fun jsonMapper(): JsonMapper {

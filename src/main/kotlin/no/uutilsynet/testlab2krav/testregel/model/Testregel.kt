@@ -1,6 +1,5 @@
 package no.uutilsynet.testlab2krav.testregel.model
 
-import tools.jackson.databind.annotation.JsonSerialize
 import java.time.Instant
 import no.uutilsynet.testlab2.constants.ITestregelDefinition
 import no.uutilsynet.testlab2.constants.QualwebTestregelDefinition
@@ -13,6 +12,7 @@ import no.uutilsynet.testlab2.validators.validateNamn
 import no.uutilsynet.testlab2.validators.validateTestregelId
 import no.uutilsynet.testlab2krav.dto.KravWcag2x
 import no.uutilsynet.testlab2krav.testregel.validateSchema
+import tools.jackson.databind.annotation.JsonSerialize
 
 @JsonSerialize(using = TestregelSerializer::class)
 data class Testregel(

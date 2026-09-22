@@ -2,9 +2,6 @@ package no.uutilsynet.testlab2krav.testregel.import
 
 import GithubFolder
 import TestregelMetadata
-import tools.jackson.databind.ObjectMapper
-import tools.jackson.databind.json.JsonMapper
-
 import java.nio.charset.Charset
 import java.time.Instant
 import java.util.*
@@ -23,6 +20,7 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestTemplate
+import tools.jackson.databind.json.JsonMapper
 
 // import kotlin.io.encoding.Base64
 

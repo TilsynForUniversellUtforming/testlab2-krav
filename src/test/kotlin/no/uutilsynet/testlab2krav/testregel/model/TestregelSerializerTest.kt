@@ -1,6 +1,5 @@
 package no.uutilsynet.testlab2krav.testregel.model
 
-import tools.jackson.module.kotlin.jacksonObjectMapper
 import java.time.Instant
 import no.uutilsynet.testlab2.constants.ManuellForenklaTestregelDefinition
 import no.uutilsynet.testlab2.constants.StringTestregelDefinition
@@ -12,6 +11,7 @@ import no.uutilsynet.testlab2.constants.TestregelUtfall
 import no.uutilsynet.testlab2.constants.TestresultatUtfall
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import tools.jackson.module.kotlin.jacksonObjectMapper
 
 class TestregelSerializerTest {
 
