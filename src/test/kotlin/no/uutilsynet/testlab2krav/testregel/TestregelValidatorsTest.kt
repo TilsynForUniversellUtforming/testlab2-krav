@@ -26,23 +26,24 @@ class TestregelValidatorsTest {
   fun validForenklet() {
     assertDoesNotThrow {
       Testregel(
-          1,
-          name,
-          1,
-          name,
-          testregelTestKravId,
-          TestregelStatus.publisert,
-          Instant.now(),
-          TestregelInnholdstype.nett,
-          TestregelModus.automatisk,
-          TestlabLocale.nb,
-          1,
-          1,
-          "",
-          testregelSchemaAutomatisk,
-          1,
-          StringTestregelDefinition("test"))
-        .validateTestregel()
+              1,
+              name,
+              1,
+              name,
+              testregelTestKravId,
+              TestregelStatus.publisert,
+              Instant.now(),
+              TestregelInnholdstype.nett,
+              TestregelModus.automatisk,
+              TestlabLocale.nb,
+              1,
+              1,
+              "",
+              testregelSchemaAutomatisk,
+              1,
+              StringTestregelDefinition("test"),
+          )
+          .validateTestregel()
     }
   }
 
@@ -51,23 +52,24 @@ class TestregelValidatorsTest {
   fun validManuell() {
     assertDoesNotThrow {
       Testregel(
-          1,
-          name,
-          1,
-          name,
-          testregelTestKravId,
-          TestregelStatus.publisert,
-          Instant.now(),
-          TestregelInnholdstype.nett,
-          TestregelModus.manuell,
-          TestlabLocale.nb,
-          1,
-          1,
-          "",
-          testregelSchemaManuell,
-          1,
-          StringTestregelDefinition("test"))
-        .validateTestregel()
+              1,
+              name,
+              1,
+              name,
+              testregelTestKravId,
+              TestregelStatus.publisert,
+              Instant.now(),
+              TestregelInnholdstype.nett,
+              TestregelModus.manuell,
+              TestlabLocale.nb,
+              1,
+              1,
+              "",
+              testregelSchemaManuell,
+              1,
+              StringTestregelDefinition("test"),
+          )
+          .validateTestregel()
     }
   }
 
@@ -79,23 +81,24 @@ class TestregelValidatorsTest {
     @DisplayName("ugyldig namn feile")
     fun invalidName() {
       val testregel =
-        Testregel(
-          1,
-          "",
-          1,
-          "",
-          testregelTestKravId,
-          TestregelStatus.publisert,
-          Instant.now(),
-          TestregelInnholdstype.nett,
-          TestregelModus.automatisk,
-          TestlabLocale.nb,
-          1,
-          1,
-          "",
-          testregelSchemaAutomatisk,
-          1,
-          StringTestregelDefinition("test"))
+          Testregel(
+              1,
+              "",
+              1,
+              "",
+              testregelTestKravId,
+              TestregelStatus.publisert,
+              Instant.now(),
+              TestregelInnholdstype.nett,
+              TestregelModus.automatisk,
+              TestlabLocale.nb,
+              1,
+              1,
+              "",
+              testregelSchemaAutomatisk,
+              1,
+              StringTestregelDefinition("test"),
+          )
       assertTrue(testregel.validateTestregel().isFailure)
     }
 
@@ -103,23 +106,24 @@ class TestregelValidatorsTest {
     @DisplayName("ugyldig testregelSchema for forenklet kontroll feile")
     fun invalidSchemaForenket() {
       val testregel =
-        Testregel(
-          1,
-          name,
-          1,
-          name,
-          testregelTestKravId,
-          TestregelStatus.publisert,
-          Instant.now(),
-          TestregelInnholdstype.nett,
-          TestregelModus.automatisk,
-          TestlabLocale.nb,
-          1,
-          1,
-          "",
-          "",
-          1,
-          StringTestregelDefinition("test"))
+          Testregel(
+              1,
+              name,
+              1,
+              name,
+              testregelTestKravId,
+              TestregelStatus.publisert,
+              Instant.now(),
+              TestregelInnholdstype.nett,
+              TestregelModus.automatisk,
+              TestlabLocale.nb,
+              1,
+              1,
+              "",
+              "",
+              1,
+              StringTestregelDefinition("test"),
+          )
       assertTrue(testregel.validateTestregel().isFailure)
     }
 
@@ -127,30 +131,32 @@ class TestregelValidatorsTest {
     @DisplayName("ugyldig testregelSchema for forenklet inngaaende feile")
     fun invalidSchemaInngaaende() {
       val testregel =
-        Testregel(
-          1,
-          name,
-          1,
-          name,
-          testregelTestKravId,
-          TestregelStatus.publisert,
-          Instant.now(),
-          TestregelInnholdstype.nett,
-          TestregelModus.manuell,
-          TestlabLocale.nb,
-          1,
-          1,
-          "",
-          "",
-          1,
-          StringTestregelDefinition("test"))
+          Testregel(
+              1,
+              name,
+              1,
+              name,
+              testregelTestKravId,
+              TestregelStatus.publisert,
+              Instant.now(),
+              TestregelInnholdstype.nett,
+              TestregelModus.manuell,
+              TestlabLocale.nb,
+              1,
+              1,
+              "",
+              "",
+              1,
+              StringTestregelDefinition("test"),
+          )
       assertTrue(testregel.validateTestregel().isFailure)
     }
   }
 
   @Test
   @DisplayName(
-    "TestregelSchema for forenklet kontroll må være på act-regel format og være riktig formattert")
+      "TestregelSchema for forenklet kontroll må være på act-regel format og være riktig formattert"
+  )
   fun testregelSchemaActError() {
     val schema = validateSchema("qw-act-r12", TestregelModus.automatisk)
     assertTrue(schema.isFailure)
@@ -158,7 +164,8 @@ class TestregelValidatorsTest {
 
   @Test
   @DisplayName(
-    "TestregelSchema for forenklet kontroll med riktig act-regel format skal være gyldig")
+      "TestregelSchema for forenklet kontroll med riktig act-regel format skal være gyldig"
+  )
   fun testregelSchemaActSuccess() {
     val schema = validateSchema(testregelSchemaAutomatisk, TestregelModus.automatisk)
     assertTrue(schema.isSuccess)
@@ -187,7 +194,8 @@ class TestregelValidatorsTest {
   inner class ValidateRequiredFields {
     @ParameterizedTest
     @MethodSource(
-      "no.uutilsynet.testlab2krav.testregel.TestregelValidatorsTest#invalidParamsSource")
+        "no.uutilsynet.testlab2krav.testregel.TestregelValidatorsTest#invalidParamsSource"
+    )
     @DisplayName("TestregelSchema være definert for forenklet kontroll")
     fun testregelSchemaErrorForenklet(invalidParam: String?) {
       val schema = validateSchema(invalidParam, TestregelModus.automatisk)
@@ -196,7 +204,8 @@ class TestregelValidatorsTest {
 
     @ParameterizedTest
     @MethodSource(
-      "no.uutilsynet.testlab2krav.testregel.TestregelValidatorsTest#invalidParamsSource")
+        "no.uutilsynet.testlab2krav.testregel.TestregelValidatorsTest#invalidParamsSource"
+    )
     @DisplayName("TestregelSchema være definert for manuell kontroll")
     fun testregelSchemaErrorManuell(invalidParam: String?) {
       val schema = validateSchema(invalidParam, TestregelModus.manuell)

@@ -1,9 +1,8 @@
 package no.uutilsynet.testlab2krav.testregel.model
 
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.databind.SerializerProvider
-import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.databind.ser.std.StdSerializer
+import tools.jackson.core.JsonGenerator
+import tools.jackson.databind.module.SimpleModule
+import tools.jackson.databind.ser.std.StdSerializer
 import no.uutilsynet.testlab2.constants.ITestregelDefinition
 import no.uutilsynet.testlab2.constants.ManuellForenklaTestregelDefinition
 import no.uutilsynet.testlab2.constants.QualwebTestregelDefinition
@@ -11,11 +10,12 @@ import no.uutilsynet.testlab2.constants.StringTestregelDefinition
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
+import tools.jackson.databind.SerializationContext
 
 @Component
 class TestregelSerializer : StdSerializer<Testregel>(Testregel::class.java) {
 
-  override fun serialize(value: Testregel, gen: JsonGenerator, provider: SerializerProvider) {
+  override fun serialize(value: Testregel, gen: JsonGenerator, provider: SerializationContext) {
     gen.writeStartObject()
 
     // Keep enum/date/null behavior aligned with the configured ObjectMapper.
@@ -25,7 +25,7 @@ class TestregelSerializer : StdSerializer<Testregel>(Testregel::class.java) {
     provider.defaultSerializeField("namn", value.namn, gen)
     provider.defaultSerializeField("kravId", value.kravId, gen)
     provider.defaultSerializeField("status", value.status, gen)
-    gen.writeStringField("datoSistEndra", value.datoSistEndra.toString())
+    gen.writeStringProperty("datoSistEndra", value.datoSistEndra.toString())
     provider.defaultSerializeField("type", value.type, gen)
     provider.defaultSerializeField("modus", value.modus, gen)
     provider.defaultSerializeField("spraak", value.spraak, gen)
@@ -35,34 +35,34 @@ class TestregelSerializer : StdSerializer<Testregel>(Testregel::class.java) {
     provider.defaultSerializeField("testregelSchema", value.testregelSchema, gen)
     provider.defaultSerializeField("innhaldstypeTesting", value.innhaldstypeTesting, gen)
 
-    gen.writeFieldName("definition")
+    gen.writeName("definition")
     writeDefinition(value.definition, gen, provider)
 
     gen.writeEndObject()
   }
 
   private fun writeDefinition(
-    definition: ITestregelDefinition,
-    gen: JsonGenerator,
-    provider: SerializerProvider
+      definition: ITestregelDefinition,
+      gen: JsonGenerator,
+      provider: SerializationContext,
   ) {
     when (definition) {
       is StringTestregelDefinition -> {
         gen.writeStartObject()
-        gen.writeStringField("type", "string")
-        gen.writeStringField("body", definition.body)
+        gen.writeStringProperty("type", "string")
+        gen.writeStringProperty("body", definition.body)
         gen.writeEndObject()
       }
       is QualwebTestregelDefinition -> {
         gen.writeStartObject()
-        gen.writeStringField("type", "qualweb")
-        gen.writeStringField("key", definition.key)
+        gen.writeStringProperty("type", "qualweb")
+        gen.writeStringProperty("key", definition.key)
         gen.writeEndObject()
       }
       is ManuellForenklaTestregelDefinition -> {
         gen.writeStartObject()
-        gen.writeStringField("type", "manuell-forenkla")
-        gen.writeStringField("description", definition.description)
+        gen.writeStringProperty("type", "manuell-forenkla")
+        gen.writeStringProperty("description", definition.description)
         provider.defaultSerializeField("utfall", definition.utfall, gen)
         gen.writeEndObject()
       }

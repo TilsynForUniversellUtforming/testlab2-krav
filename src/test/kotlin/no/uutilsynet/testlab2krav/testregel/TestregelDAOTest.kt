@@ -9,21 +9,23 @@ import no.uutilsynet.testlab2.constants.TestregelModus
 import no.uutilsynet.testlab2.constants.TestregelStatus
 import no.uutilsynet.testlab2.constants.TestregelUtfall
 import no.uutilsynet.testlab2.constants.TestresultatUtfall
-import no.uutilsynet.testlab2krav.dao.KravDAO
 import no.uutilsynet.testlab2krav.testregel.TestConstants.name
 import no.uutilsynet.testlab2krav.testregel.TestConstants.testregelSchemaAutomatisk
 import no.uutilsynet.testlab2krav.testregel.TestConstants.testregelTestKravId
 import no.uutilsynet.testlab2krav.testregel.model.TestregelInit
 import org.assertj.core.api.Assertions
-import org.junit.jupiter.api.*
-import org.springframework.beans.factory.annotation.Autowired
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest(properties = ["spring.datasource.url= jdbc:tc:postgresql:16-alpine:///test-db"])
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("test")
-class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val kravDAO: KravDAO) {
+class TestregelDAOTest(val testregelDAO: TestregelDAO) {
 
   val deleteThese: MutableList<Int> = mutableListOf()
 
@@ -77,20 +79,21 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val
   @DisplayName("Skal oppdatere testregel i DAO")
   fun updateTestregel() {
     val testregelInit =
-      TestregelInit(
-        testregelId = "QW-ACT-R1",
-        namn = "test_skal_slettes_1",
-        kravId = 1,
-        status = TestregelStatus.publisert,
-        type = TestregelInnholdstype.nett,
-        modus = TestregelModus.automatisk,
-        spraak = TestlabLocale.nb,
-        testregelSchema = "",
-        innhaldstypeTesting = 1,
-        tema = 1,
-        testobjekt = 1,
-        kravTilSamsvar = "",
-        definition = StringTestregelDefinition(""))
+        TestregelInit(
+            testregelId = "QW-ACT-R1",
+            namn = "test_skal_slettes_1",
+            kravId = 1,
+            status = TestregelStatus.publisert,
+            type = TestregelInnholdstype.nett,
+            modus = TestregelModus.automatisk,
+            spraak = TestlabLocale.nb,
+            testregelSchema = "",
+            innhaldstypeTesting = 1,
+            tema = 1,
+            testobjekt = 1,
+            kravTilSamsvar = "",
+            definition = StringTestregelDefinition(""),
+        )
     val id = createTestregel(testregelInit)
 
     val oldTestregel = testregelDAO.getTestregel(id)
@@ -100,8 +103,12 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val
     Assertions.assertThat(oldTestregel?.namn).isEqualTo(testregelInit.namn)
 
     oldTestregel
-      ?.copy(kravId = testregelTestKravId, testregelSchema = testregelSchemaAutomatisk, namn = name)
-      ?.let { testregelDAO.updateTestregel(it) }
+        ?.copy(
+            kravId = testregelTestKravId,
+            testregelSchema = testregelSchemaAutomatisk,
+            namn = name,
+        )
+        ?.let { testregelDAO.updateTestregel(it) }
 
     val updatedTestregel = testregelDAO.getTestregel(id)
     Assertions.assertThat(updatedTestregel).isNotNull
@@ -113,21 +120,22 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val
   @Test
   fun updateTestregelSetDatoSistEndra() {
     val testregelInit =
-      TestregelInit(
-        testregelId = "QW-ACT-R1",
-        namn = "test_skal_slettes_1",
-        kravId = 1,
-        status = TestregelStatus.publisert,
-        type = TestregelInnholdstype.nett,
-        modus = TestregelModus.automatisk,
-        spraak = TestlabLocale.nb,
-        datoSistEndra = Instant.now().minusSeconds(61),
-        testregelSchema = "",
-        innhaldstypeTesting = 1,
-        tema = 1,
-        testobjekt = 1,
-        kravTilSamsvar = "",
-        definition = StringTestregelDefinition(""))
+        TestregelInit(
+            testregelId = "QW-ACT-R1",
+            namn = "test_skal_slettes_1",
+            kravId = 1,
+            status = TestregelStatus.publisert,
+            type = TestregelInnholdstype.nett,
+            modus = TestregelModus.automatisk,
+            spraak = TestlabLocale.nb,
+            datoSistEndra = Instant.now().minusSeconds(61),
+            testregelSchema = "",
+            innhaldstypeTesting = 1,
+            tema = 1,
+            testobjekt = 1,
+            kravTilSamsvar = "",
+            definition = StringTestregelDefinition(""),
+        )
     val id = createTestregel(testregelInit)
 
     val oldTestregel = testregelDAO.getTestregel(id)
@@ -139,8 +147,12 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val
     val oldDate = oldTestregel?.datoSistEndra
 
     oldTestregel
-      ?.copy(kravId = testregelTestKravId, testregelSchema = testregelSchemaAutomatisk, namn = name)
-      ?.let { testregelDAO.updateTestregel(it) }
+        ?.copy(
+            kravId = testregelTestKravId,
+            testregelSchema = testregelSchemaAutomatisk,
+            namn = name,
+        )
+        ?.let { testregelDAO.updateTestregel(it) }
 
     val updatedTestregel = testregelDAO.getTestregel(id)
     Assertions.assertThat(updatedTestregel).isNotNull
@@ -157,32 +169,34 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val
   @DisplayName("Skal handtere testregel_utfall for manuell-forenkla testregel")
   fun crudTestregelUtfallForManuellForenkla() {
     val schemaWithUtfall =
-      """
-      {
-        "utfall": [
-          {"id": 1, "beskrivelse": "Fyrste utfall", "testresultat": "samsvar", "default": true},
-          {"id": 2, "beskrivelse": "Andre utfall", "testresultat": "brot", "default": false}
-        ]
-      }
-      """
-        .trimIndent()
+        """
+        {
+          "utfall": [
+            {"id": 1, "beskrivelse": "Fyrste utfall", "testresultat": "samsvar", "default": true},
+            {"id": 2, "beskrivelse": "Andre utfall", "testresultat": "brot", "default": false}
+          ]
+        }
+        """
+            .trimIndent()
 
     val id =
-      createTestregel(
-        TestregelInit(
-          testregelId = "MANUELL-FORENKLA-1",
-          namn = "manuell_forenkla_testregel",
-          kravId = testregelTestKravId,
-          status = TestregelStatus.publisert,
-          type = TestregelInnholdstype.nett,
-          modus = TestregelModus.manuellForenkla,
-          spraak = TestlabLocale.nb,
-          testregelSchema = schemaWithUtfall,
-          innhaldstypeTesting = 1,
-          tema = 1,
-          testobjekt = 1,
-          kravTilSamsvar = "",
-          definition = StringTestregelDefinition("")))
+        createTestregel(
+            TestregelInit(
+                testregelId = "MANUELL-FORENKLA-1",
+                namn = "manuell_forenkla_testregel",
+                kravId = testregelTestKravId,
+                status = TestregelStatus.publisert,
+                type = TestregelInnholdstype.nett,
+                modus = TestregelModus.manuellForenkla,
+                spraak = TestlabLocale.nb,
+                testregelSchema = schemaWithUtfall,
+                innhaldstypeTesting = 1,
+                tema = 1,
+                testobjekt = 1,
+                kravTilSamsvar = "",
+                definition = StringTestregelDefinition(""),
+            )
+        )
 
     val created = testregelDAO.getTestregel(id)
     Assertions.assertThat(created).isNotNull
@@ -191,23 +205,26 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val
     val createdDefinition = created?.definition as ManuellForenklaTestregelDefinition
     Assertions.assertThat(createdDefinition.utfall).hasSize(2)
     Assertions.assertThat(createdDefinition.utfall.map { it.beskrivelse })
-      .containsExactly("Fyrste utfall", "Andre utfall")
+        .containsExactly("Fyrste utfall", "Andre utfall")
 
     val updated =
-      created.copy(
-        testregelSchema = "{\"utfall\": []}",
-        definition =
-          ManuellForenklaTestregelDefinition(
-            description = "oppdatert",
-            helptext = "oppdatert",
-            utfall =
-              listOf(
-                TestregelUtfall(
-                  id = 10,
-                  beskrivelse = "Oppdatert utfall",
-                  testresultat = TestresultatUtfall.varsel,
-                  default = true))),
-      )
+        created.copy(
+            testregelSchema = "{\"utfall\": []}",
+            definition =
+                ManuellForenklaTestregelDefinition(
+                    description = "oppdatert",
+                    helptext = "oppdatert",
+                    utfall =
+                        listOf(
+                            TestregelUtfall(
+                                id = 10,
+                                beskrivelse = "Oppdatert utfall",
+                                testresultat = TestresultatUtfall.varsel,
+                                default = true,
+                            )
+                        ),
+                ),
+        )
 
     testregelDAO.updateTestregel(updated)
 
@@ -215,30 +232,31 @@ class TestregelDAOTest(@Autowired val testregelDAO: TestregelDAO, @Autowired val
     val updatedDefinition = fetchedAfterUpdate?.definition as ManuellForenklaTestregelDefinition
     Assertions.assertThat(updatedDefinition.utfall).hasSize(1)
     Assertions.assertThat(updatedDefinition.utfall.first().beskrivelse)
-      .isEqualTo("Oppdatert utfall")
+        .isEqualTo("Oppdatert utfall")
     Assertions.assertThat(updatedDefinition.utfall.first().testresultat)
-      .isEqualTo(TestresultatUtfall.varsel)
+        .isEqualTo(TestresultatUtfall.varsel)
 
     assertDoesNotThrow { testregelDAO.deleteTestregel(id) }
     Assertions.assertThat(testregelDAO.getTestregel(id)).isNull()
   }
 
   private fun createTestregel(
-    testregelInit: TestregelInit =
-      TestregelInit(
-        testregelId = "QW-ACT-R1",
-        namn = name,
-        kravId = testregelTestKravId,
-        status = TestregelStatus.publisert,
-        type = TestregelInnholdstype.nett,
-        modus = TestregelModus.automatisk,
-        spraak = TestlabLocale.nb,
-        testregelSchema = testregelSchemaAutomatisk,
-        innhaldstypeTesting = 1,
-        tema = 1,
-        testobjekt = 1,
-        kravTilSamsvar = "",
-        definition = StringTestregelDefinition(""))
+      testregelInit: TestregelInit =
+          TestregelInit(
+              testregelId = "QW-ACT-R1",
+              namn = name,
+              kravId = testregelTestKravId,
+              status = TestregelStatus.publisert,
+              type = TestregelInnholdstype.nett,
+              modus = TestregelModus.automatisk,
+              spraak = TestlabLocale.nb,
+              testregelSchema = testregelSchemaAutomatisk,
+              innhaldstypeTesting = 1,
+              tema = 1,
+              testobjekt = 1,
+              kravTilSamsvar = "",
+              definition = StringTestregelDefinition(""),
+          )
   ): Int {
 
     val id = testregelDAO.createTestregel(testregelInit).also { deleteThese.add(it) }
