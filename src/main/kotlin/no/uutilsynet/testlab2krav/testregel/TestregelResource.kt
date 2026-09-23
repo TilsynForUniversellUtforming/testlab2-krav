@@ -1,6 +1,7 @@
 package no.uutilsynet.testlab2krav.testregel
 
 import java.net.URI
+import java.time.Instant
 import no.uutilsynet.testlab2.utils.ErrorHandlingUtil.createWithErrorHandling
 import no.uutilsynet.testlab2.utils.ErrorHandlingUtil.executeWithErrorHandling
 import no.uutilsynet.testlab2.validators.validateNamn
@@ -164,7 +165,7 @@ class TestregelResource(
           testregelId = testregel.testregelId,
           versjon = testregel.versjon,
           status = testregel.status,
-          datoSistEndra = testregel.datoSistEndra,
+          datoSistEndra = testregel.datoSistEndra ?: Instant.now(),
           type = testregel.type,
           spraak = testregel.spraak,
           kravTilSamsvar = testregel.kravTilSamsvar,
@@ -206,7 +207,7 @@ class TestregelResource(
                   testregelId = testregel.testregelId,
                   versjon = testregel.versjon,
                   status = testregel.status,
-                  datoSistEndra = testregel.datoSistEndra,
+                  datoSistEndra = testregel.datoSistEndra ?: Instant.now(),
                   type = testregel.type,
                   spraak = testregel.spraak,
                   kravTilSamsvar = testregel.kravTilSamsvar,

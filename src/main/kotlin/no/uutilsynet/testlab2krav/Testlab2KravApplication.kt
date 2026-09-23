@@ -2,22 +2,18 @@ package no.uutilsynet.testlab2krav
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
-import org.springframework.boot.restclient.RestTemplateBuilder
 import org.springframework.boot.runApplication
-import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.http.MediaType
 import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.client.RestTemplate
 import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.json.JsonMapper
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
 class Testlab2KravApplication {
-
 
   @Bean
   fun jsonMapper(): JsonMapper {

@@ -202,7 +202,7 @@ class TestregelDAO(
     params.addValue("status", testregelInit.status.value)
     params.addValue(
         "dato_sist_endra",
-        Timestamp.from(testregelInit.datoSistEndra.truncatedTo(ChronoUnit.MINUTES)),
+        Timestamp.from(testregelInit.getOrDefaultDatoSistEndra().truncatedTo(ChronoUnit.MINUTES)),
     )
     params.addValue("spraak", testregelInit.spraak.value)
     params.addValue("tema", testregelInit.tema)

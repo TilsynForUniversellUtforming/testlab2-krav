@@ -19,7 +19,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.body
 import tools.jackson.databind.json.JsonMapper
 
 // import kotlin.io.encoding.Base64
@@ -28,7 +28,6 @@ private const val TESTREGLAR = "Testreglar"
 
 @Service
 class TestregelImportService(
-    val restTemplate: RestTemplate,
     val properties: GithubProperties,
     val testregelDAO: TestregelDAO,
     val kravDAO: KravDAO,
@@ -39,7 +38,7 @@ class TestregelImportService(
   val repoApiAddress =
       "https://api.github.com/repos/TilsynForUniversellUtforming/testreglar-wcag-2.x/contents/"
 
-  val restClient = RestClient.builder(restTemplate).build()
+  val restClient = RestClient.builder().build()
 
   val sql =
       """
@@ -126,13 +125,13 @@ class TestregelImportService(
             .header("Authorization", "token ${properties.token}")
             .accept(MediaType.parseMediaType("application/vnd.github.raw+json; charset=utf-8"))
             .retrieve()
-            .body(Array<GithubFolder>::class.java)
+            .body<Array<GithubFolder>>()
 
     if (folderResponse != null) {
       return folderResponse.asList()
     }
     println("Url $url")
-    throw IllegalStateException("No response from github")
+    throw NoSuchElementException("No response from github")
   }
 
   fun getTestreglarFolder(): List<GithubFolder>? = doRequest(repoApiAddress + TESTREGLAR)

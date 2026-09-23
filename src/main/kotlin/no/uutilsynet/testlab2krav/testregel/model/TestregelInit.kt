@@ -12,7 +12,7 @@ data class TestregelInit(
     val namn: String,
     val kravId: Int,
     val status: TestregelStatus,
-    val datoSistEndra: Instant = Instant.now(),
+    val datoSistEndra: Instant? = null,
     val type: TestregelInnholdstype,
     val modus: TestregelModus,
     val spraak: TestlabLocale,
@@ -22,4 +22,6 @@ data class TestregelInit(
     val testregelSchema: String,
     val innhaldstypeTesting: Int?,
     val definition: ITestregelDefinition?,
-)
+) {
+  fun getOrDefaultDatoSistEndra(): Instant = datoSistEndra ?: Instant.now()
+}

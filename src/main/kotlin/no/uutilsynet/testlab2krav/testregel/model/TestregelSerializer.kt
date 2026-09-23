@@ -4,16 +4,18 @@ import no.uutilsynet.testlab2.constants.ITestregelDefinition
 import no.uutilsynet.testlab2.constants.ManuellForenklaTestregelDefinition
 import no.uutilsynet.testlab2.constants.QualwebTestregelDefinition
 import no.uutilsynet.testlab2.constants.StringTestregelDefinition
+import org.springframework.boot.jackson.JacksonComponent
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
 import tools.jackson.core.JsonGenerator
 import tools.jackson.databind.SerializationContext
+import tools.jackson.databind.ValueSerializer
 import tools.jackson.databind.module.SimpleModule
-import tools.jackson.databind.ser.std.StdSerializer
 
+@JacksonComponent
 @Component
-class TestregelSerializer : StdSerializer<Testregel>(Testregel::class.java) {
+class TestregelSerializer : ValueSerializer<Testregel>() {
 
   override fun serialize(value: Testregel, gen: JsonGenerator, provider: SerializationContext) {
     gen.writeStartObject()

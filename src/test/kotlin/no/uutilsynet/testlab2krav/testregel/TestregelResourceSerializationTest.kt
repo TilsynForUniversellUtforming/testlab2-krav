@@ -1,5 +1,6 @@
 package no.uutilsynet.testlab2krav.testregel
 
+import java.time.Instant
 import no.uutilsynet.testlab2.constants.ManuellForenklaTestregelDefinition
 import no.uutilsynet.testlab2.constants.TestlabLocale
 import no.uutilsynet.testlab2.constants.TestregelInnholdstype
@@ -21,7 +22,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.time.Instant
 
 @WebMvcTest(TestregelResource::class)
 class TestregelResourceSerializationTest {
