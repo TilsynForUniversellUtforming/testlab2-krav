@@ -20,7 +20,7 @@ class KravResource(val kravDao: KravDAO) : KravApi {
 
   @GetMapping("wcag2krav/suksesskriterium/{suksesskriterium}")
   override fun getKravBySuksesskriterium(@PathVariable suksesskriterium: String): KravWcag2x =
-    kravDao.getKravBySuksesskriterium(suksesskriterium)
+      kravDao.getKravBySuksesskriterium(suksesskriterium)
 
   @PostMapping("wcag2krav")
   override fun createWcagKrav(@RequestBody krav: KravInit): Int = kravDao.createWcagKrav(krav)
@@ -29,8 +29,8 @@ class KravResource(val kravDao: KravDAO) : KravApi {
 
   @PutMapping("wcag2krav/{id}")
   override fun updateWcagKrav(
-    @RequestBody krav: KravWcag2x,
-    @PathVariable id: Int
+      @RequestBody krav: KravWcag2x,
+      @PathVariable id: Int,
   ): ResponseEntity<String> {
     require(krav.id == id) { "Krav id i path og body er ikkje like " + krav.id + " " + id }
     val status: Int = kravDao.updateWcagKrav(krav)

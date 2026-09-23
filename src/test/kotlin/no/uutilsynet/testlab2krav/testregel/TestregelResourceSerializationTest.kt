@@ -16,11 +16,7 @@ import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.boot.web.client.RestTemplateBuilder
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Import
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -28,7 +24,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest(TestregelResource::class)
-@Import(TestregelResourceSerializationTest.WebMvcTestConfig::class)
 class TestregelResourceSerializationTest {
 
   @Autowired private lateinit var mockMvc: MockMvc
@@ -38,54 +33,53 @@ class TestregelResourceSerializationTest {
   @MockitoBean lateinit var testregelImportService: TestregelImportService
   @MockitoBean lateinit var testregelSerializer: TestregelSerializer
 
-  @TestConfiguration
-  class WebMvcTestConfig {
-    @Bean fun restTemplateBuilder(): RestTemplateBuilder = RestTemplateBuilder()
-  }
-
   @Test
   fun `getTestregel returns serialized manuellForenkla definition`() {
     val testregel =
-      Testregel(
-        id = 42,
-        testregelId = "MANUELL-FORENKLA-42",
-        versjon = 1,
-        namn = "Manuell forenkla",
-        kravId = 3,
-        status = TestregelStatus.publisert,
-        datoSistEndra = Instant.parse("2026-06-01T12:00:00Z"),
-        type = TestregelInnholdstype.nett,
-        modus = TestregelModus.manuellForenkla,
-        spraak = TestlabLocale.nb,
-        tema = 1,
-        testobjekt = 2,
-        kravTilSamsvar = "samsvar",
-        testregelSchema = "{\"utfall\":[]}",
-        innhaldstypeTesting = 4,
-        definition =
-          ManuellForenklaTestregelDefinition(
-            description = "Forenkla definisjon",
-            helptext = "Helpetekst",
-            utfall =
-              listOf(
-                TestregelUtfall(
-                  id = 1,
-                  beskrivelse = "Alt ok",
-                  testresultat = TestresultatUtfall.samsvar,
-                  default = true))))
+        Testregel(
+            id = 42,
+            testregelId = "MANUELL-FORENKLA-42",
+            versjon = 1,
+            namn = "Manuell forenkla",
+            kravId = 3,
+            status = TestregelStatus.publisert,
+            datoSistEndra = Instant.parse("2026-06-01T12:00:00Z"),
+            type = TestregelInnholdstype.nett,
+            modus = TestregelModus.manuellForenkla,
+            spraak = TestlabLocale.nb,
+            tema = 1,
+            testobjekt = 2,
+            kravTilSamsvar = "samsvar",
+            testregelSchema = "{\"utfall\":[]}",
+            innhaldstypeTesting = 4,
+            definition =
+                ManuellForenklaTestregelDefinition(
+                    description = "Forenkla definisjon",
+                    helptext = "Helpetekst",
+                    utfall =
+                        listOf(
+                            TestregelUtfall(
+                                id = 1,
+                                beskrivelse = "Alt ok",
+                                testresultat = TestresultatUtfall.samsvar,
+                                default = true,
+                            )
+                        ),
+                ),
+        )
 
     Mockito.`when`(testregelService.getTestregel(42)).thenReturn(testregel)
 
     mockMvc
-      .perform(get("/v1/testreglar/42"))
-      .andExpect(status().isOk)
-      .andExpect(jsonPath("$.id").value(42))
-      .andExpect(jsonPath("$.testregelId").value("MANUELL-FORENKLA-42"))
-      .andExpect(jsonPath("$.modus").value("manuell-forenkla"))
-      .andExpect(jsonPath("$.definition.description").value("Forenkla definisjon"))
-      .andExpect(jsonPath("$.definition.utfall", hasSize<Any>(1)))
-      .andExpect(jsonPath("$.definition.utfall[0].beskrivelse").value("Alt ok"))
-      .andExpect(jsonPath("$.definition.utfall[0].testresultat").value("samsvar"))
-      .andExpect(jsonPath("$.definition.key").doesNotExist())
+        .perform(get("/v1/testreglar/42"))
+        .andExpect(status().isOk)
+        .andExpect(jsonPath("$.id").value(42))
+        .andExpect(jsonPath("$.testregelId").value("MANUELL-FORENKLA-42"))
+        .andExpect(jsonPath("$.modus").value("manuell-forenkla"))
+        .andExpect(jsonPath("$.definition.description").value("Forenkla definisjon"))
+        .andExpect(jsonPath("$.definition.utfall", hasSize<Any>(1)))
+        .andExpect(jsonPath("$.definition.utfall[0].beskrivelse").value("Alt ok"))
+        .andExpect(jsonPath("$.definition.utfall[0].testresultat").value("samsvar"))
+        .andExpect(jsonPath("$.definition.key").doesNotExist())
   }
 }

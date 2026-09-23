@@ -13,18 +13,18 @@ object TestConstants {
   val modus = TestregelModus.automatisk
 
   val testregelCreateRequestBody =
-    mapOf(
-      "testregelId" to testregelSchemaAutomatisk,
-      "namn" to name,
-      "kravId" to testregelTestKravId,
-      "status" to TestregelStatus.publisert,
-      "type" to TestregelInnholdstype.nett,
-      "modus" to modus,
-      "spraak" to TestlabLocale.nb,
-      "testregelSchema" to testregelSchemaAutomatisk,
-      "innhaldstypeTesting" to 1,
-      "tema" to 1,
-      "testobjekt" to 1,
-      "kravTilSamsvar" to "",
-    )
+      mapOf(
+          "testregelId" to testregelSchemaAutomatisk,
+          "namn" to name,
+          "kravId" to testregelTestKravId,
+          "status" to TestregelStatus.publisert,
+          "type" to TestregelInnholdstype.nett,
+          "modus" to modus,
+          "spraak" to TestlabLocale.nb,
+          "testregelSchema" to testregelSchemaAutomatisk,
+          "innhaldstypeTesting" to 1,
+          "tema" to 1,
+          "testobjekt" to 1,
+          "kravTilSamsvar" to "",
+      )
 }

@@ -1,45 +1,36 @@
 package no.uutilsynet.testlab2krav
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import no.uutilsynet.testlab2krav.testregel.model.Testregel
-import no.uutilsynet.testlab2krav.testregel.model.TestregelSerializer
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
-import org.springframework.boot.web.client.RestTemplateBuilder
-import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.http.MediaType
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.client.RestTemplate
+import tools.jackson.databind.DeserializationFeature
+import tools.jackson.databind.json.JsonMapper
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
-@EnableCaching
 class Testlab2KravApplication {
 
   @Bean
-  fun restTemplate(
-    restTemplateBuilder: RestTemplateBuilder,
-    testregelSerializer: TestregelSerializer
-  ): RestTemplate {
-    val objectMapper =
-      jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+  fun jsonMapper(): JsonMapper {
+    return JsonMapper.builder()
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        .build()
+  }
 
-    val mappingJackson2HttpMessageConverter = MappingJackson2HttpMessageConverter()
-    mappingJackson2HttpMessageConverter.objectMapper = objectMapper
-    mappingJackson2HttpMessageConverter.supportedMediaTypes =
-      listOf(MediaType.APPLICATION_JSON, MediaType.APPLICATION_OCTET_STREAM)
-
-    val module = SimpleModule()
-    module.addSerializer(Testregel::class.java, testregelSerializer)
-    objectMapper.registerModule(module)
-
-    return restTemplateBuilder.messageConverters(mappingJackson2HttpMessageConverter).build()
+  @Bean
+  fun jacksonJsonHttpMessageConverter(jsonMapper: JsonMapper): JacksonJsonHttpMessageConverter {
+    val converter = JacksonJsonHttpMessageConverter(jsonMapper)
+    converter.supportedMediaTypes =
+        listOf(
+            MediaType.APPLICATION_JSON,
+            MediaType.APPLICATION_OCTET_STREAM,
+        )
+    return converter
   }
 }
 

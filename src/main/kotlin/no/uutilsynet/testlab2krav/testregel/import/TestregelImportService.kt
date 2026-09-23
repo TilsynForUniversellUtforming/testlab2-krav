@@ -2,7 +2,6 @@ package no.uutilsynet.testlab2krav.testregel.import
 
 import GithubFolder
 import TestregelMetadata
-import com.fasterxml.jackson.databind.ObjectMapper
 import java.nio.charset.Charset
 import java.time.Instant
 import java.util.*
@@ -20,7 +19,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.body
+import tools.jackson.databind.json.JsonMapper
 
 // import kotlin.io.encoding.Base64
 
@@ -28,73 +28,74 @@ private const val TESTREGLAR = "Testreglar"
 
 @Service
 class TestregelImportService(
-  val restTemplate: RestTemplate,
-  val properties: GithubProperties,
-  val testregelDAO: TestregelDAO,
-  val kravDAO: KravDAO
+    val properties: GithubProperties,
+    val testregelDAO: TestregelDAO,
+    val kravDAO: KravDAO,
 ) {
 
   val logger = LoggerFactory.getLogger(TestregelImportService::class.java)
 
   val repoApiAddress =
-    "https://api.github.com/repos/TilsynForUniversellUtforming/testreglar-wcag-2.x/contents/"
+      "https://api.github.com/repos/TilsynForUniversellUtforming/testreglar-wcag-2.x/contents/"
 
-  val restClient = RestClient.builder(restTemplate).build()
+  val restClient = RestClient.builder().build()
 
   val sql =
-    """insert into 
-            testregel (
-              krav_id,
-              testregel_schema,
-              namn,
-              modus,
-              testregel_id,
-              versjon,
-              status,
-              dato_sist_endra,
-              spraak,
-              tema,
-              type,
-              testobjekt,
-              krav_til_samsvar,
-              innhaldstype_testing
-            ) values (
-              :krav_id,
-              :testregel_schema,
-              :namn,
-              :modus,
-              :testregel_id,
-              :versjon,
-              :status,
-              :dato_sist_endra,
-              :spraak,
-              :tema,
-              :type,
-              :testobjekt,
-              :krav_til_samsvar,
-              :innhaldstype_testing
-            ) 
-            returning id
-    """
-      .trimIndent()
+      """
+      insert into 
+                  testregel (
+                    krav_id,
+                    testregel_schema,
+                    namn,
+                    modus,
+                    testregel_id,
+                    versjon,
+                    status,
+                    dato_sist_endra,
+                    spraak,
+                    tema,
+                    type,
+                    testobjekt,
+                    krav_til_samsvar,
+                    innhaldstype_testing
+                  ) values (
+                    :krav_id,
+                    :testregel_schema,
+                    :namn,
+                    :modus,
+                    :testregel_id,
+                    :versjon,
+                    :status,
+                    :dato_sist_endra,
+                    :spraak,
+                    :tema,
+                    :type,
+                    :testobjekt,
+                    :krav_til_samsvar,
+                    :innhaldstype_testing
+                  ) 
+                  returning id
+      """
+          .trimIndent()
 
   private val unntakNett = listOf("1.3.4")
   private val unntakApp =
-    listOf(
-      "1.4.12",
-      "1.4.13",
-      "2.1.4",
-      "2.4.1",
-      "2.4.2",
-      "2.4.3",
-      "2.4.5",
-      "2.4.7",
-      "3.1.2",
-      "3.2.1",
-      "3.2.3",
-      "3.2.4",
-      "4.1.1",
-      "4.1.3")
+      listOf(
+          "1.4.12",
+          "1.4.13",
+          "2.1.4",
+          "2.4.1",
+          "2.4.2",
+          "2.4.3",
+          "2.4.5",
+          "2.4.7",
+          "3.1.2",
+          "3.2.1",
+          "3.2.3",
+          "3.2.4",
+          "4.1.1",
+          "4.1.3",
+      )
 
   fun readFolder() {
 
@@ -111,32 +112,32 @@ class TestregelImportService(
   fun getTestregelList(): List<String> {
     val testregelFolders = doRequest(repoApiAddress + TESTREGLAR)
     val testregelar: List<String>? =
-      testregelFolders.filter { it.name != "felles" }.map { testregel -> testregel.name }
+        testregelFolders.filter { it.name != "felles" }.map { testregel -> testregel.name }
     return testregelar ?: emptyList()
   }
 
   fun doRequest(url: String): List<GithubFolder> {
 
     val folderResponse =
-      restClient
-        .get()
-        .uri(url)
-        .header("Authorization", "token ${properties.token}")
-        .accept(MediaType.parseMediaType("application/vnd.github.raw+json; charset=utf-8"))
-        .retrieve()
-        .body(Array<GithubFolder>::class.java)
+        restClient
+            .get()
+            .uri(url)
+            .header("Authorization", "token ${properties.token}")
+            .accept(MediaType.parseMediaType("application/vnd.github.raw+json; charset=utf-8"))
+            .retrieve()
+            .body<Array<GithubFolder>>()
 
     if (folderResponse != null) {
       return folderResponse.asList()
     }
     println("Url $url")
-    throw IllegalStateException("No response from github")
+    throw NoSuchElementException("No response from github")
   }
 
   fun getTestreglarFolder(): List<GithubFolder>? = doRequest(repoApiAddress + TESTREGLAR)
 
   fun getTestregelTypeFolder(testregel: String): List<GithubFolder> =
-    doRequest("$repoApiAddress$TESTREGLAR/$testregel")
+      doRequest("$repoApiAddress$TESTREGLAR/$testregel")
 
   fun getTypeForTestregel(testregel: String, type: TestregelType): List<GithubFolder> {
     return doRequest("$repoApiAddress$TESTREGLAR/$testregel/$type")
@@ -146,13 +147,13 @@ class TestregelImportService(
     val url = "$repoApiAddress$TESTREGLAR/$testregel/$type/$name"
 
     val response =
-      restClient
-        .get()
-        .uri(url)
-        .header("Authorization", "token ${properties.token}")
-        .accept(MediaType.APPLICATION_JSON)
-        .retrieve()
-        .body(GithubFolder::class.java)
+        restClient
+            .get()
+            .uri(url)
+            .header("Authorization", "token ${properties.token}")
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .body(GithubFolder::class.java)
 
     if (response != null) {
       return response
@@ -163,43 +164,44 @@ class TestregelImportService(
   fun getTestregelDataAsString(testregel: GithubFolder): String? {
     testregel.content?.let {
       val content =
-        Base64.getDecoder().decode(it.replace("\n", "").toByteArray(Charset.forName("UTF-8")))
+          Base64.getDecoder().decode(it.replace("\n", "").toByteArray(Charset.forName("UTF-8")))
       val jsonString = String(content, Charset.defaultCharset())
       return jsonString
-    }
-      ?: return null
+    } ?: return null
   }
 
   fun githubContentToTestregel(githubSource: String): TestregelInit {
-    val objectMapper = ObjectMapper()
+    val objectMapper = JsonMapper()
     val testregelMeta =
-      runCatching { objectMapper.readValue(githubSource, TestregelMetadata::class.java) }
-        .fold(
-          onSuccess = { it },
-          onFailure = {
-            println("Feil ved mapping av testregel")
-            println(githubSource)
-            throw it
-          })
+        runCatching { objectMapper.readValue(githubSource, TestregelMetadata::class.java) }
+            .fold(
+                onSuccess = { it },
+                onFailure = {
+                  println("Feil ved mapping av testregel")
+                  println(githubSource)
+                  throw it
+                },
+            )
 
     val krav = extractKrav(testregelMeta.id)
 
     val kravId = kravDAO.getKravBySuksesskriterium(krav).id
 
     return TestregelInit(
-      testregelId = testregelMeta.id,
-      namn = testregelMeta.namn,
-      kravId = kravId,
-      status = TestregelStatus.publisert,
-      type = TestregelInnholdstype.valueOf(testregelMeta.type.lowercase()),
-      modus = TestregelModus.manuell,
-      spraak = TestlabLocale.nn,
-      tema = 1,
-      testobjekt = 1,
-      kravTilSamsvar = testregelMeta.kravTilSamsvar,
-      testregelSchema = githubSource,
-      innhaldstypeTesting = 1,
-      definition = StringTestregelDefinition(githubSource))
+        testregelId = testregelMeta.id,
+        namn = testregelMeta.namn,
+        kravId = kravId,
+        status = TestregelStatus.publisert,
+        type = TestregelInnholdstype.valueOf(testregelMeta.type.lowercase()),
+        modus = TestregelModus.manuell,
+        spraak = TestlabLocale.nn,
+        tema = 1,
+        testobjekt = 1,
+        kravTilSamsvar = testregelMeta.kravTilSamsvar,
+        testregelSchema = githubSource,
+        innhaldstypeTesting = 1,
+        definition = StringTestregelDefinition(githubSource),
+    )
   }
 
   fun extractKrav(testregelId: String): String {
@@ -208,56 +210,57 @@ class TestregelImportService(
 
   fun getTestreglarApp(testregelList: List<String>): List<String> {
     return testregelList
-      .filter { !unntakApp.contains(it) }
-      .map { getTypeForTestregel(it, TestregelType.App) }
-      .map { it.map { it.name } }
-      .flatten()
+        .filter { !unntakApp.contains(it) }
+        .map { getTypeForTestregel(it, TestregelType.App) }
+        .map { it.map { it.name } }
+        .flatten()
   }
 
   fun getTestreglarNett(testregelList: List<String>): List<String> {
     return testregelList
-      .filter { !unntakNett.contains(it) }
-      .map { getTypeForTestregel(it, TestregelType.Nett) }
-      .map { it.map { it.name } }
-      .flatten()
+        .filter { !unntakNett.contains(it) }
+        .map { getTypeForTestregel(it, TestregelType.Nett) }
+        .map { it.map { it.name } }
+        .flatten()
   }
 
   fun getTestreglarForKrav(krav: String, testregelType: TestregelType): List<Int> {
     return getTestregelFiler(krav, testregelType)
-      .asSequence()
-      .map { getTestregel(krav, testregelType, it) }
-      .mapNotNull { getTestregelDataAsString(it) }
-      .filter { it.isNotEmpty() }
-      .map { githubContentToTestregel(it) }
-      .map { createOrUpdate(it) }
-      .toList()
+        .asSequence()
+        .map { getTestregel(krav, testregelType, it) }
+        .mapNotNull { getTestregelDataAsString(it) }
+        .filter { it.isNotEmpty() }
+        .map { githubContentToTestregel(it) }
+        .map { createOrUpdate(it) }
+        .toList()
   }
 
   private fun getTestregelFiler(krav: String, testregelType: TestregelType) =
-    getTypeForTestregel(krav, testregelType).map { it.name }
+      getTypeForTestregel(krav, testregelType).map { it.name }
 
   fun createOrUpdate(testregel: TestregelInit): Int {
     val existing = testregelDAO.getTestregelByTestregelId(testregel.testregelId)
     return if (existing != null) {
       logger.info("Update testregel ${testregel.testregelId}")
       val updated =
-        Testregel(
-          id = existing.id,
-          testregelId = testregel.testregelId,
-          versjon = existing.versjon,
-          namn = testregel.namn,
-          kravId = testregel.kravId,
-          status = TestregelStatus.publisert,
-          type = testregel.type,
-          testregelSchema = testregel.testregelSchema,
-          modus = TestregelModus.manuell,
-          spraak = TestlabLocale.nn,
-          tema = existing.tema,
-          testobjekt = existing.testobjekt,
-          kravTilSamsvar = testregel.kravTilSamsvar,
-          innhaldstypeTesting = existing.innhaldstypeTesting,
-          datoSistEndra = Instant.now(),
-          definition = StringTestregelDefinition(existing.testregelSchema))
+          Testregel(
+              id = existing.id,
+              testregelId = testregel.testregelId,
+              versjon = existing.versjon,
+              namn = testregel.namn,
+              kravId = testregel.kravId,
+              status = TestregelStatus.publisert,
+              type = testregel.type,
+              testregelSchema = testregel.testregelSchema,
+              modus = TestregelModus.manuell,
+              spraak = TestlabLocale.nn,
+              tema = existing.tema,
+              testobjekt = existing.testobjekt,
+              kravTilSamsvar = testregel.kravTilSamsvar,
+              innhaldstypeTesting = existing.innhaldstypeTesting,
+              datoSistEndra = Instant.now(),
+              definition = StringTestregelDefinition(existing.testregelSchema),
+          )
 
       testregelDAO.updateTestregel(updated)
     } else {
@@ -270,10 +273,10 @@ class TestregelImportService(
     return runCatching {
       val testregelList = getTestregelList()
       testregelList
-        .filter { !unntakNett.contains(it) }
-        .map { getTestreglarForKrav(it, TestregelType.Nett) }
-        .flatten()
-        .sum()
+          .filter { !unntakNett.contains(it) }
+          .map { getTestreglarForKrav(it, TestregelType.Nett) }
+          .flatten()
+          .sum()
     }
   }
 
@@ -281,17 +284,17 @@ class TestregelImportService(
     return runCatching {
       val testregelList = getTestregelList()
       testregelList
-        .filter { !unntakApp.contains(it) }
-        .map { getTestreglarForKrav(it, TestregelType.App) }
-        .flatten()
-        .sum()
+          .filter { !unntakApp.contains(it) }
+          .map { getTestreglarForKrav(it, TestregelType.App) }
+          .flatten()
+          .sum()
     }
   }
 }
 
 enum class TestregelType {
   App,
-  Nett
+  Nett,
 }
 
 @ConfigurationProperties(prefix = "github") data class GithubProperties(val token: String)

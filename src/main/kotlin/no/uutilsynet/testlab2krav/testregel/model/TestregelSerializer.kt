@@ -1,72 +1,73 @@
 package no.uutilsynet.testlab2krav.testregel.model
 
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.databind.SerializerProvider
-import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import no.uutilsynet.testlab2.constants.ITestregelDefinition
 import no.uutilsynet.testlab2.constants.ManuellForenklaTestregelDefinition
 import no.uutilsynet.testlab2.constants.QualwebTestregelDefinition
 import no.uutilsynet.testlab2.constants.StringTestregelDefinition
+import org.springframework.boot.jackson.JacksonComponent
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
+import tools.jackson.core.JsonGenerator
+import tools.jackson.databind.SerializationContext
+import tools.jackson.databind.ValueSerializer
+import tools.jackson.databind.module.SimpleModule
 
+@JacksonComponent
 @Component
-class TestregelSerializer : StdSerializer<Testregel>(Testregel::class.java) {
+class TestregelSerializer : ValueSerializer<Testregel>() {
 
-  override fun serialize(value: Testregel, gen: JsonGenerator, provider: SerializerProvider) {
+  override fun serialize(value: Testregel, gen: JsonGenerator, provider: SerializationContext) {
     gen.writeStartObject()
 
     // Keep enum/date/null behavior aligned with the configured ObjectMapper.
-    provider.defaultSerializeField("id", value.id, gen)
-    provider.defaultSerializeField("testregelId", value.testregelId, gen)
-    provider.defaultSerializeField("versjon", value.versjon, gen)
-    provider.defaultSerializeField("namn", value.namn, gen)
-    provider.defaultSerializeField("kravId", value.kravId, gen)
-    provider.defaultSerializeField("status", value.status, gen)
-    gen.writeStringField("datoSistEndra", value.datoSistEndra.toString())
-    provider.defaultSerializeField("type", value.type, gen)
-    provider.defaultSerializeField("modus", value.modus, gen)
-    provider.defaultSerializeField("spraak", value.spraak, gen)
-    provider.defaultSerializeField("tema", value.tema, gen)
-    provider.defaultSerializeField("testobjekt", value.testobjekt, gen)
-    provider.defaultSerializeField("kravTilSamsvar", value.kravTilSamsvar, gen)
-    provider.defaultSerializeField("testregelSchema", value.testregelSchema, gen)
-    provider.defaultSerializeField("innhaldstypeTesting", value.innhaldstypeTesting, gen)
+    provider.defaultSerializeProperty("id", value.id, gen)
+    provider.defaultSerializeProperty("testregelId", value.testregelId, gen)
+    provider.defaultSerializeProperty("versjon", value.versjon, gen)
+    provider.defaultSerializeProperty("namn", value.namn, gen)
+    provider.defaultSerializeProperty("kravId", value.kravId, gen)
+    provider.defaultSerializeProperty("status", value.status, gen)
+    gen.writeStringProperty("datoSistEndra", value.datoSistEndra.toString())
+    provider.defaultSerializeProperty("type", value.type, gen)
+    provider.defaultSerializeProperty("modus", value.modus, gen)
+    provider.defaultSerializeProperty("spraak", value.spraak, gen)
+    provider.defaultSerializeProperty("tema", value.tema, gen)
+    provider.defaultSerializeProperty("testobjekt", value.testobjekt, gen)
+    provider.defaultSerializeProperty("kravTilSamsvar", value.kravTilSamsvar, gen)
+    provider.defaultSerializeProperty("testregelSchema", value.testregelSchema, gen)
+    provider.defaultSerializeProperty("innhaldstypeTesting", value.innhaldstypeTesting, gen)
 
-    gen.writeFieldName("definition")
+    gen.writeName("definition")
     writeDefinition(value.definition, gen, provider)
 
     gen.writeEndObject()
   }
 
   private fun writeDefinition(
-    definition: ITestregelDefinition,
-    gen: JsonGenerator,
-    provider: SerializerProvider
+      definition: ITestregelDefinition,
+      gen: JsonGenerator,
+      provider: SerializationContext,
   ) {
     when (definition) {
       is StringTestregelDefinition -> {
         gen.writeStartObject()
-        gen.writeStringField("type", "string")
-        gen.writeStringField("body", definition.body)
+        gen.writeStringProperty("type", "string")
+        gen.writeStringProperty("body", definition.body)
         gen.writeEndObject()
       }
       is QualwebTestregelDefinition -> {
         gen.writeStartObject()
-        gen.writeStringField("type", "qualweb")
-        gen.writeStringField("key", definition.key)
+        gen.writeStringProperty("type", "qualweb")
+        gen.writeStringProperty("key", definition.key)
         gen.writeEndObject()
       }
       is ManuellForenklaTestregelDefinition -> {
         gen.writeStartObject()
-        gen.writeStringField("type", "manuell-forenkla")
-        gen.writeStringField("description", definition.description)
-        provider.defaultSerializeField("utfall", definition.utfall, gen)
+        gen.writeStringProperty("type", "manuell-forenkla")
+        gen.writeStringProperty("description", definition.description)
+        provider.defaultSerializeProperty("utfall", definition.utfall, gen)
         gen.writeEndObject()
       }
-      else -> provider.defaultSerializeValue(definition, gen)
     }
   }
 }
