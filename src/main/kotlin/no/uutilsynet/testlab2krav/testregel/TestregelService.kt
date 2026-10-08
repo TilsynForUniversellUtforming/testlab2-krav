@@ -1,13 +1,15 @@
 package no.uutilsynet.testlab2krav.testregel
 
-import io.micrometer.observation.annotation.Observed
+import no.uutilsynet.testlab2.constants.ManuellForenklaTestregelDefinition
+import no.uutilsynet.testlab2.constants.TestregelModus
+import no.uutilsynet.testlab2.constants.TestregelUtfall
+import no.uutilsynet.testlab2.constants.TestresultatUtfall
 import no.uutilsynet.testlab2krav.dao.KravDAO
 import no.uutilsynet.testlab2krav.testregel.model.InnhaldstypeTesting
 import no.uutilsynet.testlab2krav.testregel.model.Tema
 import no.uutilsynet.testlab2krav.testregel.model.Testobjekt
 import no.uutilsynet.testlab2krav.testregel.model.Testregel
 import no.uutilsynet.testlab2krav.testregel.model.TestregelInit
-import no.uutilsynet.testlab2krav.testregel.model.TestregelKrav
 import org.springframework.stereotype.Service
 
 @Service
@@ -21,20 +23,8 @@ class TestregelService(private val testregelDAO: TestregelDAO, private val kravD
       testregelDAO.getTestregelByTestregelId(testregelKey)
           ?: throw IllegalArgumentException("Fant ikkje testregel med nøkkel $testregelKey")
 
-  fun getTestregelListFromIds(testregelIdList: List<Int>): List<Testregel> {
-    return testregelDAO.getMany(testregelIdList)
-  }
-
   fun getTestregelList(): List<Testregel> {
     return testregelDAO.getTestregelList()
-  }
-
-  fun createTema(tema: String): Int {
-    return testregelDAO.createTema(tema)
-  }
-
-  fun createInnhaldstypeForTesting(innhaldstype: String): Int {
-    return testregelDAO.createInnholdstypeTesting(innhaldstype)
   }
 
   fun createTestregel(testregelInit: TestregelInit): Int {
@@ -61,30 +51,39 @@ class TestregelService(private val testregelDAO: TestregelDAO, private val kravD
     return testregelDAO.deleteTestregel(testregelId)
   }
 
-  @Observed(name = "testregelservice.gettestregelkravlist")
-  fun getTestregelKravList(): List<TestregelKrav> {
-    val testregler = testregelDAO.getTestregelList()
-    val kravMap = kravDAO.listWcagKrav().associateBy { it.id }
+  fun isOutcomeCustom(testregelId: Int, customUtfall: String): Boolean {
+    val testregel = getTestregel(testregelId)
+    val canHaveCustomOutcome = testregel.modus == TestregelModus.manuellForenkla
+    if (canHaveCustomOutcome && testregel.definition is ManuellForenklaTestregelDefinition) {
+      val  utfallListe = (testregel.definition as ManuellForenklaTestregelDefinition).utfall
+      return utfallListe.map { it.beskrivelse }.contains(customUtfall)
+    }
+    return false
+  }
 
-    return testregler.map { testregel ->
-      val krav =
-          kravMap[testregel.kravId]
-              ?: throw IllegalArgumentException("Fant ikkje krav med id ${testregel.kravId}")
-      TestregelKrav(testregel, krav)
+  fun saveCustomOutcome(testregelId: Int, customUtfall: String,testresultat: TestresultatUtfall): Testregel {
+    val testregel = getTestregel(testregelId)
+    if (testregel.modus == TestregelModus.manuellForenkla
+      && testregel.definition is ManuellForenklaTestregelDefinition) {
+      val utfallListe = (testregel.definition as ManuellForenklaTestregelDefinition).utfall.toMutableList()
+      val newUtfall = TestregelUtfall(
+        id = null,
+        beskrivelse = customUtfall,
+        testresultat = testresultat,
+        default = false
+      )
+      utfallListe.add(newUtfall)
+      val newDefinition = ManuellForenklaTestregelDefinition(
+        description = (testregel.definition as ManuellForenklaTestregelDefinition).description,
+        helptext = (testregel.definition as ManuellForenklaTestregelDefinition).helptext,
+        utfall = utfallListe
+      )
+      val updatedTestregel = testregel.copy(definition = newDefinition)
+      updateTestregel(updatedTestregel)
+      return updatedTestregel
+    } else {
+      error("Testregelen med id $testregelId kan ikke ha tilpasset utfall")
     }
   }
 
-  fun getTestreglarForKrav(kravId: Int): List<Testregel> {
-    return testregelDAO.getTestregelForKrav(kravId)
-  }
-
-  fun getTestregelKrav(testregelId: Int): TestregelKrav {
-    val testregel = testregelDAO.getTestregel(testregelId)
-    val krav =
-        kravDAO.getWcagKrav(
-            testregel?.kravId
-                ?: throw IllegalArgumentException("Fant ikkje krav med id ${testregelId}")
-        )
-    return TestregelKrav(testregel, krav)
-  }
 }
