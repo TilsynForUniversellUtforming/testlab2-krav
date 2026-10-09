@@ -1,5 +1,6 @@
 package no.uutilsynet.testlab2krav.testregel
 
+import no.uutilsynet.testlab2.constants.TestresultatUtfall
 import java.net.URI
 import java.time.Instant
 import no.uutilsynet.testlab2.utils.ErrorHandlingUtil.createWithErrorHandling
@@ -12,6 +13,7 @@ import no.uutilsynet.testlab2krav.testregel.model.Testregel.Companion.validateTe
 import no.uutilsynet.testlab2krav.testregel.model.TestregelAggregate
 import no.uutilsynet.testlab2krav.testregel.model.TestregelInit
 import no.uutilsynet.testlab2krav.testregel.model.TestregelKravResponse
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -26,7 +28,7 @@ class TestregelResource(
     private val kravDAO: KravDAO,
 ) {
 
-  val logger = LoggerFactory.getLogger(TestregelResource::class.java)
+  val logger: Logger = LoggerFactory.getLogger(TestregelResource::class.java)
 
   private val locationForId: (Int) -> URI = { id -> URI("/v1/testreglar/${id}") }
 
@@ -221,6 +223,29 @@ class TestregelResource(
         }
   }
 
+    @PutMapping("{id}/customOutcome")
+    fun updateTestregelWithCustomOutcome(
+        @PathVariable("id") testregelId: Int,
+        @RequestBody customOutcome: TestregelCustomOutcomeRequest
+    ): ResponseEntity<Testregel> {
+        return runCatching {
+            val isOutcomeCustom = testregelService.isOutcomeCustom(testregelId, customOutcome.customUtfall)
+            if (isOutcomeCustom) {
+                val updatedTestregel = testregelService.saveCustomOutcome(
+                    testregelId,
+                    customOutcome.customUtfall,
+                    customOutcome.testresultat
+                )
+                ResponseEntity.ok(updatedTestregel)
+            }
+            return ResponseEntity.noContent().build()
+        }.getOrElse {
+            logger.error("Feil ved oppdatering av testregel med tilpasset utfall", it)
+            ResponseEntity.internalServerError().build()
+        }
+    }
+
+
   fun Testregel.toTestregelKravResponse(): TestregelKravResponse {
     val krav = kravDAO.getWcagKrav(kravId)
     return TestregelKravResponse(
@@ -231,3 +256,8 @@ class TestregelResource(
     )
   }
 }
+
+data class TestregelCustomOutcomeRequest(
+    val customUtfall: String,
+    val testresultat: TestresultatUtfall
+)

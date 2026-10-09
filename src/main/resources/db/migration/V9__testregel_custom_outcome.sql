@@ -1,0 +1,2 @@
+ALTER TABLE testregel_utfall
+ADD COLUMN isCustomOutcome BOOLEAN DEFAULT FALSE;
