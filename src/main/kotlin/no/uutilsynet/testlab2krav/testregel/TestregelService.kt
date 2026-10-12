@@ -4,7 +4,6 @@ import no.uutilsynet.testlab2.constants.ManuellForenklaTestregelDefinition
 import no.uutilsynet.testlab2.constants.TestregelModus
 import no.uutilsynet.testlab2.constants.TestregelUtfall
 import no.uutilsynet.testlab2.constants.TestresultatUtfall
-import no.uutilsynet.testlab2krav.dao.KravDAO
 import no.uutilsynet.testlab2krav.testregel.model.InnhaldstypeTesting
 import no.uutilsynet.testlab2krav.testregel.model.Tema
 import no.uutilsynet.testlab2krav.testregel.model.Testobjekt
@@ -13,7 +12,7 @@ import no.uutilsynet.testlab2krav.testregel.model.TestregelInit
 import org.springframework.stereotype.Service
 
 @Service
-class TestregelService(private val testregelDAO: TestregelDAO, private val kravDAO: KravDAO) {
+class TestregelService(private val testregelDAO: TestregelDAO) {
 
   fun getTestregel(testregelId: Int): Testregel =
       testregelDAO.getTestregel(testregelId)

@@ -65,6 +65,7 @@ class TestregelIntegrationTests {
                 "1.1.1",
                 WcagSamsvarsnivaa.A,
                 "kommentar",
+                null
             )
         )
   }

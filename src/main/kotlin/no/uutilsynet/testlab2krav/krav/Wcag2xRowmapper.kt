@@ -27,6 +27,7 @@ class Wcag2xRowmapper : RowMapper<KravWcag2x> {
         rs.getString("suksesskriterium"),
         WcagSamsvarsnivaa::nivaa.findBy(rs.getString("samsvarsnivaa")),
         rs.getString("kommentar_brudd"),
+        null
     )
   }
 

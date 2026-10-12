@@ -13,7 +13,6 @@ import no.uutilsynet.testlab2.constants.TestregelUtfall
 import no.uutilsynet.testlab2.constants.TestresultatUtfall
 import no.uutilsynet.testlab2krav.testregel.TestregelDAO.TestregelParams.deleteTestregelSql
 import no.uutilsynet.testlab2krav.testregel.TestregelDAO.TestregelParams.getTestregelByTestregelId
-import no.uutilsynet.testlab2krav.testregel.TestregelDAO.TestregelParams.getTestregelListByIdList
 import no.uutilsynet.testlab2krav.testregel.TestregelDAO.TestregelParams.getTestregelListSql
 import no.uutilsynet.testlab2krav.testregel.TestregelDAO.TestregelParams.getTestregelSql
 import no.uutilsynet.testlab2krav.testregel.TestregelDAO.TestregelParams.updateTestregel
@@ -50,14 +49,7 @@ class TestregelDAO(
         """
             .trimMargin()
 
-    val getTestregelListByIdList =
-        """
-        |select id, testregel_id,versjon,namn, krav_id, status, dato_sist_endra,type , modus ,spraak,tema,testobjekt,krav_til_samsvar,testregel_schema, innhaldstype_testing, helptext  
-        |from "testlab2_krav"."testregel" where id in (:ids) order by id
-        """
-            .trimMargin()
-
-    val getTestregelSql =
+      val getTestregelSql =
         """
         |select id, testregel_id,versjon,namn, krav_id, status, dato_sist_endra,type, modus ,spraak,tema,testobjekt,krav_til_samsvar,testregel_schema, innhaldstype_testing,helptext 
         |from "testlab2_krav"."testregel" where id = :id order by id
@@ -168,14 +160,7 @@ class TestregelDAO(
           )
       )
 
-  fun getMany(testregelIdList: List<Int>): List<Testregel> =
-      jdbcTemplate.query(
-          getTestregelListByIdList,
-          mapOf("ids" to testregelIdList),
-          testregelRowMapper,
-      )
-
-  @Transactional
+    @Transactional
   @CacheEvict(
       value =
           [
@@ -192,30 +177,9 @@ class TestregelDAO(
 
     val keyHolder: KeyHolder = GeneratedKeyHolder()
 
-    val params = MapSqlParameterSource()
-    params.addValue("krav_id", testregelInit.kravId)
-    params.addValue("testregel_schema", testregelInit.testregelSchema)
-    params.addValue("namn", testregelInit.namn)
-    params.addValue("modus", testregelInit.modus.value)
-    params.addValue("testregel_id", setTestregelId(testregelInit))
-    params.addValue("versjon", 1)
-    params.addValue("status", testregelInit.status.value)
-    params.addValue(
-        "dato_sist_endra",
-        Timestamp.from(testregelInit.getOrDefaultDatoSistEndra().truncatedTo(ChronoUnit.MINUTES)),
-    )
-    params.addValue("spraak", testregelInit.spraak.value)
-    params.addValue("tema", testregelInit.tema)
-    params.addValue("type", testregelInit.type.value)
-    params.addValue("testobjekt", testregelInit.testobjekt)
-    params.addValue("krav_til_samsvar", testregelInit.kravTilSamsvar)
-    params.addValue("innhaldstype_testing", testregelInit.innhaldstypeTesting)
-    params.addValue(
-        "helptext",
-        (testregelInit.definition as? ManuellForenklaTestregelDefinition)?.helptext,
-    )
+        val params = createTestregelParams(testregelInit)
 
-    jdbcTemplate.update(
+        jdbcTemplate.update(
         """
         insert into 
           "testlab2_krav"."testregel"(
@@ -265,7 +229,33 @@ class TestregelDAO(
     return testregelId
   }
 
-  @Transactional
+    private fun createTestregelParams(testregelInit: TestregelInit): MapSqlParameterSource {
+        val params = MapSqlParameterSource()
+        params.addValue("krav_id", testregelInit.kravId)
+        params.addValue("testregel_schema", testregelInit.testregelSchema)
+        params.addValue("namn", testregelInit.namn)
+        params.addValue("modus", testregelInit.modus.value)
+        params.addValue("testregel_id", setTestregelId(testregelInit))
+        params.addValue("versjon", 1)
+        params.addValue("status", testregelInit.status.value)
+        params.addValue(
+            "dato_sist_endra",
+            Timestamp.from(testregelInit.getOrDefaultDatoSistEndra().truncatedTo(ChronoUnit.MINUTES)),
+        )
+        params.addValue("spraak", testregelInit.spraak.value)
+        params.addValue("tema", testregelInit.tema)
+        params.addValue("type", testregelInit.type.value)
+        params.addValue("testobjekt", testregelInit.testobjekt)
+        params.addValue("krav_til_samsvar", testregelInit.kravTilSamsvar)
+        params.addValue("innhaldstype_testing", testregelInit.innhaldstypeTesting)
+        params.addValue(
+            "helptext",
+            (testregelInit.definition as? ManuellForenklaTestregelDefinition)?.helptext,
+        )
+        return params
+    }
+
+    @Transactional
   @CacheEvict(
       cacheNames =
           [
@@ -355,32 +345,7 @@ class TestregelDAO(
           DataClassRowMapper.newInstance(Testobjekt::class.java),
       )
 
-  fun getTestregelForKrav(kravId: Int): List<Testregel> =
-      jdbcTemplate.query(
-          """select * from testregel where krav_id = :kravId""",
-          mapOf("kravId" to kravId),
-          testregelRowMapper,
-      )
-
-  fun createInnholdstypeTesting(innholdstypeTesting: String): Int {
-    return jdbcTemplate.update(
-        """insert into "innhaldstype_testing" (innhaldstype) values (:innhaldstype_testing)""",
-        mapOf("innhaldstype_testing" to innholdstypeTesting),
-    )
-  }
-
-  fun createTema(tema: String): Int {
-    val keyHolder = GeneratedKeyHolder()
-
-    val params = MapSqlParameterSource()
-    params.addValue("tema", tema)
-
-    jdbcTemplate.update("""insert into "tema" (tema) values (:tema)""", params, keyHolder)
-
-    return keyHolder.keys?.get("id") as Int
-  }
-
-  private fun parseStatus(value: String): TestregelStatus =
+    private fun parseStatus(value: String): TestregelStatus =
       TestregelStatus.entries.firstOrNull { it.value == value || it.name == value }
           ?: error("Unknown testregel status: $value")
 
