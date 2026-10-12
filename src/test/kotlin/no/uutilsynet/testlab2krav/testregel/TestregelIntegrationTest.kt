@@ -35,7 +35,7 @@ import org.springframework.web.context.WebApplicationContext
 )
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("test")
-class TestregelIntegrationTests {
+class TestregelIntegrationTest {
 
   @MockitoBean private lateinit var kravregisterClient: KravDAO
 
