@@ -1,16 +1,12 @@
 package no.uutilsynet.testlab2krav.dao
 
-import no.uutilsynet.testlab2krav.dao.KravDAO.KravParams.kravRowmapper
-import no.uutilsynet.testlab2krav.dao.KravDAO.KravParams.listKravSql
 import no.uutilsynet.testlab2krav.dao.KravDAO.KravParams.listWcag2xSql
 import no.uutilsynet.testlab2krav.dao.KravDAO.KravParams.selectById
 import no.uutilsynet.testlab2krav.dao.KravDAO.KravParams.selectBySuksesskriterium
-import no.uutilsynet.testlab2krav.dto.Krav
 import no.uutilsynet.testlab2krav.dto.KravInit
 import no.uutilsynet.testlab2krav.dto.KravWcag2x
 import no.uutilsynet.testlab2krav.krav.Wcag2xRowmapper
 import org.slf4j.LoggerFactory
-import org.springframework.jdbc.core.DataClassRowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.support.GeneratedKeyHolder
@@ -25,21 +21,7 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
 
   object KravParams {
 
-    val listKravSql: String =
-        """
-        select id,
-                tittel,
-                status,
-                innhald,
-                gjeldautomat,
-                gjeldnettsider,
-                gjeldapp,
-                urlrettleiing 
-            from testlab2_krav.krav
-        """
-            .trimIndent()
-
-    val listWcag2xSql: String =
+      val listWcag2xSql: String =
         """
         select id,
                 tittel,
@@ -62,12 +44,9 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
 
     val selectBySuksesskriterium = "$listWcag2xSql where suksesskriterium = :suksesskriterium"
 
-    val kravRowmapper = DataClassRowMapper.newInstance(Krav::class.java)
   }
 
-  fun listKrav(): List<Krav> = jdbcTemplate.query(listKravSql, kravRowmapper)
-
-  fun listWcagKrav(): List<KravWcag2x> {
+    fun listWcagKrav(): List<KravWcag2x> {
     return jdbcTemplate.query(listWcag2xSql, Wcag2xRowmapper())
   }
 

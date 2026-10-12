@@ -10,9 +10,9 @@ interface KravApi {
 
   fun listWcagKrav(): List<KravWcag2x>
 
-  fun getWcagKrav(id: Int): KravWcag2x
+  fun getWcagKrav(id: Int): Result<KravWcag2x>
 
-  fun getKravBySuksesskriterium(suksesskriterium: String): KravWcag2x
+  fun getKravBySuksesskriterium(suksesskriterium: String): Result<KravWcag2x>
 
   fun createWcagKrav(krav: KravInit): Int
 

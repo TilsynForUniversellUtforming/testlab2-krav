@@ -1,8 +1,8 @@
 package no.uutilsynet.testlab2krav.testregel
 
-import no.uutilsynet.testlab2.constants.TestresultatUtfall
 import java.net.URI
 import java.time.Instant
+import no.uutilsynet.testlab2.constants.TestresultatUtfall
 import no.uutilsynet.testlab2.utils.ErrorHandlingUtil.createWithErrorHandling
 import no.uutilsynet.testlab2.utils.ErrorHandlingUtil.executeWithErrorHandling
 import no.uutilsynet.testlab2.validators.validateNamn
@@ -223,28 +223,30 @@ class TestregelResource(
         }
   }
 
-    @PutMapping("{id}/customOutcome")
-    fun updateTestregelWithCustomOutcome(
-        @PathVariable("id") testregelId: Int,
-        @RequestBody customOutcome: TestregelCustomOutcomeRequest
-    ): ResponseEntity<Testregel> {
-        return runCatching {
-            val isOutcomeCustom = testregelService.isOutcomeCustom(testregelId, customOutcome.customUtfall)
-            if (isOutcomeCustom) {
-                val updatedTestregel = testregelService.saveCustomOutcome(
+  @PutMapping("{id}/customOutcome")
+  fun updateTestregelWithCustomOutcome(
+      @PathVariable("id") testregelId: Int,
+      @RequestBody customOutcome: TestregelCustomOutcomeRequest,
+  ): ResponseEntity<Testregel> {
+    return runCatching {
+          val isOutcomeCustom =
+              testregelService.isOutcomeCustom(testregelId, customOutcome.customUtfall)
+          if (isOutcomeCustom) {
+            val updatedTestregel =
+                testregelService.saveCustomOutcome(
                     testregelId,
                     customOutcome.customUtfall,
-                    customOutcome.testresultat
+                    customOutcome.testresultat,
                 )
-                ResponseEntity.ok(updatedTestregel)
-            }
-            return ResponseEntity.noContent().build()
-        }.getOrElse {
-            logger.error("Feil ved oppdatering av testregel med tilpasset utfall", it)
-            ResponseEntity.internalServerError().build()
+            ResponseEntity.ok(updatedTestregel)
+          }
+          return ResponseEntity.noContent().build()
         }
-    }
-
+        .getOrElse {
+          logger.error("Feil ved oppdatering av testregel med tilpasset utfall", it)
+          ResponseEntity.internalServerError().build()
+        }
+  }
 
   fun Testregel.toTestregelKravResponse(): TestregelKravResponse {
     val krav = kravDAO.getWcagKrav(kravId)
@@ -259,5 +261,5 @@ class TestregelResource(
 
 data class TestregelCustomOutcomeRequest(
     val customUtfall: String,
-    val testresultat: TestresultatUtfall
+    val testresultat: TestresultatUtfall,
 )

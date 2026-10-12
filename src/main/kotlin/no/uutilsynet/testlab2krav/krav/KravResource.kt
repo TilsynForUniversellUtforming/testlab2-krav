@@ -4,31 +4,49 @@ import no.uutilsynet.testlab2krav.dao.KravDAO
 import no.uutilsynet.testlab2krav.dto.Krav
 import no.uutilsynet.testlab2krav.dto.KravInit
 import no.uutilsynet.testlab2krav.dto.KravWcag2x
+import no.uutilsynet.testlab2krav.service.KravService
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("v1/krav")
-class KravResource(val kravDao: KravDAO) : KravApi {
+class KravResource(val kravDao: KravDAO,val kravService: KravService)  {
 
-  @GetMapping override fun listKrav(): List<Krav> = kravDao.listWcagKrav()
+  @GetMapping
+  fun listKrav(): List<Krav> = kravService.listWcagKrav()
 
-  @GetMapping("wcag2krav") override fun listWcagKrav(): List<KravWcag2x> = kravDao.listWcagKrav()
+  @GetMapping("wcag2krav") fun listWcagKrav(): List<KravWcag2x> = kravService.listWcagKrav()
 
   @GetMapping("wcag2krav/{id}")
-  override fun getWcagKrav(@PathVariable id: Int): KravWcag2x = kravDao.getWcagKrav(id)
+  fun getWcagKrav(@PathVariable id: Int): ResponseEntity<KravWcag2x> {
+    return kravService.getWcagKrav(id).fold(
+        onSuccess = { ResponseEntity.ok(it) },
+        onFailure = { ResponseEntity.notFound().build() }
+    )
+  }
 
   @GetMapping("wcag2krav/suksesskriterium/{suksesskriterium}")
-  override fun getKravBySuksesskriterium(@PathVariable suksesskriterium: String): KravWcag2x =
-      kravDao.getKravBySuksesskriterium(suksesskriterium)
+  fun getKravBySuksesskriterium(@PathVariable suksesskriterium: String): ResponseEntity<KravWcag2x> =
+      kravService.getKravBySuksesskriterium(suksesskriterium).fold(
+          onSuccess = { ResponseEntity.ok(it) },
+          onFailure = { ResponseEntity.notFound().build() }
+      )
 
   @PostMapping("wcag2krav")
-  override fun createWcagKrav(@RequestBody krav: KravInit): Int = kravDao.createWcagKrav(krav)
+  fun createWcagKrav(@RequestBody krav: KravInit): Int = kravService.createWcagKrav(krav)
 
-  @DeleteMapping override fun deleteKrav(kravId: Int): Boolean = kravDao.deleteKrav(kravId)
+  @DeleteMapping
+  fun deleteKrav(kravId: Int): Boolean = kravService.deleteKrav(kravId)
 
   @PutMapping("wcag2krav/{id}")
-  override fun updateWcagKrav(
+  fun updateWcagKrav(
       @RequestBody krav: KravWcag2x,
       @PathVariable id: Int,
   ): ResponseEntity<String> {
@@ -41,7 +59,7 @@ class KravResource(val kravDao: KravDAO) : KravApi {
   }
 
   @DeleteMapping("wcag2krav/{id}")
-  override fun deleteWcagKrav(@PathVariable id: Int): ResponseEntity<String> {
+  fun deleteWcagKrav(@PathVariable id: Int): ResponseEntity<String> {
     val status: Boolean = kravDao.deleteKrav(id)
     if (!status) {
       return ResponseEntity.badRequest().body("Feil ved sletting av krav med id $id")

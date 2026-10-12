@@ -55,29 +55,39 @@ class TestregelService(private val testregelDAO: TestregelDAO, private val kravD
     val testregel = getTestregel(testregelId)
     val canHaveCustomOutcome = testregel.modus == TestregelModus.manuellForenkla
     if (canHaveCustomOutcome && testregel.definition is ManuellForenklaTestregelDefinition) {
-      val  utfallListe = (testregel.definition as ManuellForenklaTestregelDefinition).utfall
+      val utfallListe = (testregel.definition as ManuellForenklaTestregelDefinition).utfall
       return utfallListe.map { it.beskrivelse }.contains(customUtfall)
     }
     return false
   }
 
-  fun saveCustomOutcome(testregelId: Int, customUtfall: String,testresultat: TestresultatUtfall): Testregel {
+  fun saveCustomOutcome(
+      testregelId: Int,
+      customUtfall: String,
+      testresultat: TestresultatUtfall,
+  ): Testregel {
     val testregel = getTestregel(testregelId)
-    if (testregel.modus == TestregelModus.manuellForenkla
-      && testregel.definition is ManuellForenklaTestregelDefinition) {
-      val utfallListe = (testregel.definition as ManuellForenklaTestregelDefinition).utfall.toMutableList()
-      val newUtfall = TestregelUtfall(
-        id = null,
-        beskrivelse = customUtfall,
-        testresultat = testresultat,
-        default = false
-      )
+    if (
+        testregel.modus == TestregelModus.manuellForenkla &&
+            testregel.definition is ManuellForenklaTestregelDefinition
+    ) {
+      val utfallListe =
+          (testregel.definition as ManuellForenklaTestregelDefinition).utfall.toMutableList()
+      val newUtfall =
+          TestregelUtfall(
+              id = null,
+              beskrivelse = customUtfall,
+              testresultat = testresultat,
+              default = false,
+          )
       utfallListe.add(newUtfall)
-      val newDefinition = ManuellForenklaTestregelDefinition(
-        description = (testregel.definition as ManuellForenklaTestregelDefinition).description,
-        helptext = (testregel.definition as ManuellForenklaTestregelDefinition).helptext,
-        utfall = utfallListe
-      )
+      val newDefinition =
+          ManuellForenklaTestregelDefinition(
+              description =
+                  (testregel.definition as ManuellForenklaTestregelDefinition).description,
+              helptext = (testregel.definition as ManuellForenklaTestregelDefinition).helptext,
+              utfall = utfallListe,
+          )
       val updatedTestregel = testregel.copy(definition = newDefinition)
       updateTestregel(updatedTestregel)
       return updatedTestregel
@@ -85,5 +95,4 @@ class TestregelService(private val testregelDAO: TestregelDAO, private val kravD
       error("Testregelen med id $testregelId kan ikke ha tilpasset utfall")
     }
   }
-
 }

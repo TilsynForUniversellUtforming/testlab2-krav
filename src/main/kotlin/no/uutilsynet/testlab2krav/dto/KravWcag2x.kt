@@ -7,7 +7,7 @@ import no.uutilsynet.testlab2.constants.WcagRetninglinje
 import no.uutilsynet.testlab2.constants.WcagSamsvarsnivaa
 
 data class KravWcag2x(
-    override val id: Int,
+    val id: Int,
     override val tittel: String,
     override val status: KravStatus,
     override val innhald: String?,
@@ -20,18 +20,8 @@ data class KravWcag2x(
     val suksesskriterium: String,
     val samsvarsnivaa: WcagSamsvarsnivaa?,
     override val kommentarBrudd: String?,
-) :
-    Krav(
-        id,
-        tittel,
-        status,
-        innhald,
-        gjeldAutomat,
-        gjeldNettsider,
-        gjeldApp,
-        urlRettleiing,
-        kommentarBrudd,
-    )
+    val standard: Standard?
+) : Krav
 
 data class KravInit(
     val tittel: String,
@@ -46,4 +36,5 @@ data class KravInit(
     val suksesskriterium: String,
     val samsvarsnivaa: WcagSamsvarsnivaa?,
     val kommentarBrudd: String?,
+    val standardId:Int?
 )
