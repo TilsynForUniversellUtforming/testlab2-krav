@@ -13,3 +13,9 @@ spring:
 
 github:
   token: ''
+
+  spring:
+    jpa:
+      hibernate:
+        ddl-auto: validate
+      show-sql: true

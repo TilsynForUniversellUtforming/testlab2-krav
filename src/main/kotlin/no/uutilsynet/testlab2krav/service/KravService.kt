@@ -54,9 +54,9 @@ class KravService(
   }
 
   override fun createWcagKrav(krav: KravInit): Int {
-    var standard: StandardEntity? = null
-    if (krav.standardId != null) {
-      standard = standardRepository.findById(krav.standardId)
+    var standard: MutableSet<StandardEntity> = mutableSetOf()
+    if (krav.standardId?.isNotEmpty() ?: false) {
+      standard = standardRepository.findByIdIn(krav.standardId).toMutableSet()
     }
     val kravEntity =
         Wcag2KravEntity(
@@ -93,12 +93,12 @@ class KravService(
           suksesskriterium = this.suksesskriterium,
           samsvarsnivaa = this.samsvarsnivaa,
           kommentarBrudd = this.kommentarBrudd,
-          standard = this.standard?.toStandard(),
+          standard = this.standard.map { it.toStandard() }.toMutableSet(),
       )
 
-  override fun deleteKrav(kravid: Int): Boolean {
-    return if (wcag2KravRepository.existsById(kravid)) {
-      wcag2KravRepository.deleteById(kravid)
+  override fun deleteKrav(kravId: Int): Boolean {
+    return if (wcag2KravRepository.existsById(kravId)) {
+      wcag2KravRepository.deleteById(kravId)
       true
     } else {
       false
@@ -135,7 +135,7 @@ class KravService(
         suksesskriterium = this.suksesskriterium,
         samsvarsnivaa = this.samsvarsnivaa,
         kommentarBrudd = this.kommentarBrudd,
-        standard = this.standard?.toStandardEntity(),
+        standard = this.standard?.map { it.toStandardEntity() }?.toMutableSet() ?: mutableSetOf(),
     )
   }
 
@@ -146,7 +146,7 @@ class KravService(
         this.status,
         gjeldOffentlig = this.gjeldOffentlig,
         gjeldPrivat = this.gjeldPrivat,
-        krav = this.krav.map { it.toKravWcag2x() },
+        krav = this.krav.map { it.toKravWcag2x() }.toMutableSet(),
     )
   }
 
@@ -158,7 +158,6 @@ class KravService(
           gjeldOffentlig = this.gjeldOffentlig,
           gjeldPrivat = this.gjeldPrivat,
           krav =
-              this.krav.map { it as KravWcag2x }.map { it.toWcag2KravEntity() }
-                  as MutableList<Wcag2KravEntity>,
+              this.krav.map { it as KravWcag2x }.map { it.toWcag2KravEntity() }.toMutableSet(),
       )
 }

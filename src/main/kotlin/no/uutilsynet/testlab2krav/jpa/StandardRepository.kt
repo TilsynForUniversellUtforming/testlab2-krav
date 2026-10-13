@@ -8,4 +8,6 @@ interface StandardRepository : JpaRepository<StandardEntity, Long> {
   fun findByTittel(tittel: String): StandardEntity?
 
   fun findById(id: Int): StandardEntity?
+
+  fun findByIdIn(id: List<Int>): List<StandardEntity>
 }
