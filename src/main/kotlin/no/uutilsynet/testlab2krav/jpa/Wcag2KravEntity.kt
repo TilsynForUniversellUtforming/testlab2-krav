@@ -14,7 +14,6 @@ import no.uutilsynet.testlab2.constants.WcagPrinsipp
 import no.uutilsynet.testlab2.constants.WcagRetninglinje
 import no.uutilsynet.testlab2.constants.WcagSamsvarsnivaa
 import no.uutilsynet.testlab2krav.dto.Krav
-import no.uutilsynet.testlab2krav.dto.Standard
 
 @Suppress("LongParameterList")
 @Entity(name = "wcag2krav")

@@ -4,7 +4,6 @@ import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
-import org.springframework.data.relational.core.sql.In
 
 @Entity
 class StandardEntity(
@@ -14,5 +13,5 @@ class StandardEntity(
     var gjeldPrivat: Boolean,
     @OneToMany(mappedBy = "standard", fetch = FetchType.LAZY)
     var krav: MutableList<Wcag2KravEntity> = mutableListOf(),
-    @Id var id: Int? = null
+    @Id var id: Int? = null,
 )

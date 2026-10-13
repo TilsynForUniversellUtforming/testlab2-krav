@@ -20,7 +20,7 @@ data class KravWcag2x(
     val suksesskriterium: String,
     val samsvarsnivaa: WcagSamsvarsnivaa?,
     override val kommentarBrudd: String?,
-    val standard: Standard?
+    val standard: Standard?,
 ) : Krav
 
 data class KravInit(
@@ -36,5 +36,5 @@ data class KravInit(
     val suksesskriterium: String,
     val samsvarsnivaa: WcagSamsvarsnivaa?,
     val kommentarBrudd: String?,
-    val standardId:Int?
+    val standardId: Int?,
 )

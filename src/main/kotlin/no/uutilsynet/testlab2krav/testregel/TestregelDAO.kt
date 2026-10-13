@@ -49,7 +49,7 @@ class TestregelDAO(
         """
             .trimMargin()
 
-      val getTestregelSql =
+    val getTestregelSql =
         """
         |select id, testregel_id,versjon,namn, krav_id, status, dato_sist_endra,type, modus ,spraak,tema,testobjekt,krav_til_samsvar,testregel_schema, innhaldstype_testing,helptext 
         |from "testlab2_krav"."testregel" where id = :id order by id
@@ -160,7 +160,7 @@ class TestregelDAO(
           )
       )
 
-    @Transactional
+  @Transactional
   @CacheEvict(
       value =
           [
@@ -177,9 +177,9 @@ class TestregelDAO(
 
     val keyHolder: KeyHolder = GeneratedKeyHolder()
 
-        val params = createTestregelParams(testregelInit)
+    val params = createTestregelParams(testregelInit)
 
-        jdbcTemplate.update(
+    jdbcTemplate.update(
         """
         insert into 
           "testlab2_krav"."testregel"(
@@ -229,33 +229,33 @@ class TestregelDAO(
     return testregelId
   }
 
-    private fun createTestregelParams(testregelInit: TestregelInit): MapSqlParameterSource {
-        val params = MapSqlParameterSource()
-        params.addValue("krav_id", testregelInit.kravId)
-        params.addValue("testregel_schema", testregelInit.testregelSchema)
-        params.addValue("namn", testregelInit.namn)
-        params.addValue("modus", testregelInit.modus.value)
-        params.addValue("testregel_id", setTestregelId(testregelInit))
-        params.addValue("versjon", 1)
-        params.addValue("status", testregelInit.status.value)
-        params.addValue(
-            "dato_sist_endra",
-            Timestamp.from(testregelInit.getOrDefaultDatoSistEndra().truncatedTo(ChronoUnit.MINUTES)),
-        )
-        params.addValue("spraak", testregelInit.spraak.value)
-        params.addValue("tema", testregelInit.tema)
-        params.addValue("type", testregelInit.type.value)
-        params.addValue("testobjekt", testregelInit.testobjekt)
-        params.addValue("krav_til_samsvar", testregelInit.kravTilSamsvar)
-        params.addValue("innhaldstype_testing", testregelInit.innhaldstypeTesting)
-        params.addValue(
-            "helptext",
-            (testregelInit.definition as? ManuellForenklaTestregelDefinition)?.helptext,
-        )
-        return params
-    }
+  private fun createTestregelParams(testregelInit: TestregelInit): MapSqlParameterSource {
+    val params = MapSqlParameterSource()
+    params.addValue("krav_id", testregelInit.kravId)
+    params.addValue("testregel_schema", testregelInit.testregelSchema)
+    params.addValue("namn", testregelInit.namn)
+    params.addValue("modus", testregelInit.modus.value)
+    params.addValue("testregel_id", setTestregelId(testregelInit))
+    params.addValue("versjon", 1)
+    params.addValue("status", testregelInit.status.value)
+    params.addValue(
+        "dato_sist_endra",
+        Timestamp.from(testregelInit.getOrDefaultDatoSistEndra().truncatedTo(ChronoUnit.MINUTES)),
+    )
+    params.addValue("spraak", testregelInit.spraak.value)
+    params.addValue("tema", testregelInit.tema)
+    params.addValue("type", testregelInit.type.value)
+    params.addValue("testobjekt", testregelInit.testobjekt)
+    params.addValue("krav_til_samsvar", testregelInit.kravTilSamsvar)
+    params.addValue("innhaldstype_testing", testregelInit.innhaldstypeTesting)
+    params.addValue(
+        "helptext",
+        (testregelInit.definition as? ManuellForenklaTestregelDefinition)?.helptext,
+    )
+    return params
+  }
 
-    @Transactional
+  @Transactional
   @CacheEvict(
       cacheNames =
           [
@@ -345,7 +345,7 @@ class TestregelDAO(
           DataClassRowMapper.newInstance(Testobjekt::class.java),
       )
 
-    private fun parseStatus(value: String): TestregelStatus =
+  private fun parseStatus(value: String): TestregelStatus =
       TestregelStatus.entries.firstOrNull { it.value == value || it.name == value }
           ?: error("Unknown testregel status: $value")
 

@@ -63,6 +63,7 @@ class TestregelResourceTest {
             suksesskriterium = "Kriterium",
             samsvarsnivaa = WcagSamsvarsnivaa.AA,
             kommentarBrudd = "Kommentar",
+            null,
         )
 
     Mockito.`when`(testregelService.getTestregelList()).thenReturn(listOf(testregelBase))

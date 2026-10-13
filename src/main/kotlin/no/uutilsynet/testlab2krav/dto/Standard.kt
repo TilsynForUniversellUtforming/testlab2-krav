@@ -6,5 +6,5 @@ data class Standard(
     val status: String,
     val gjeldOffentlig: Boolean,
     var gjeldPrivat: Boolean,
-    val krav: List<Krav>
+    val krav: List<Krav>,
 )

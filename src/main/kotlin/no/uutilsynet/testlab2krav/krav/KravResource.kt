@@ -17,33 +17,37 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("v1/krav")
-class KravResource(val kravDao: KravDAO,val kravService: KravService)  {
+class KravResource(val kravDao: KravDAO, val kravService: KravService) {
 
-  @GetMapping
-  fun listKrav(): List<Krav> = kravService.listWcagKrav()
+  @GetMapping fun listKrav(): List<Krav> = kravService.listWcagKrav()
 
   @GetMapping("wcag2krav") fun listWcagKrav(): List<KravWcag2x> = kravService.listWcagKrav()
 
   @GetMapping("wcag2krav/{id}")
   fun getWcagKrav(@PathVariable id: Int): ResponseEntity<KravWcag2x> {
-    return kravService.getWcagKrav(id).fold(
-        onSuccess = { ResponseEntity.ok(it) },
-        onFailure = { ResponseEntity.notFound().build() }
-    )
+    return kravService
+        .getWcagKrav(id)
+        .fold(
+            onSuccess = { ResponseEntity.ok(it) },
+            onFailure = { ResponseEntity.notFound().build() },
+        )
   }
 
   @GetMapping("wcag2krav/suksesskriterium/{suksesskriterium}")
-  fun getKravBySuksesskriterium(@PathVariable suksesskriterium: String): ResponseEntity<KravWcag2x> =
-      kravService.getKravBySuksesskriterium(suksesskriterium).fold(
-          onSuccess = { ResponseEntity.ok(it) },
-          onFailure = { ResponseEntity.notFound().build() }
-      )
+  fun getKravBySuksesskriterium(
+      @PathVariable suksesskriterium: String
+  ): ResponseEntity<KravWcag2x> =
+      kravService
+          .getKravBySuksesskriterium(suksesskriterium)
+          .fold(
+              onSuccess = { ResponseEntity.ok(it) },
+              onFailure = { ResponseEntity.notFound().build() },
+          )
 
   @PostMapping("wcag2krav")
   fun createWcagKrav(@RequestBody krav: KravInit): Int = kravService.createWcagKrav(krav)
 
-  @DeleteMapping
-  fun deleteKrav(kravId: Int): Boolean = kravService.deleteKrav(kravId)
+  @DeleteMapping fun deleteKrav(kravId: Int): Boolean = kravService.deleteKrav(kravId)
 
   @PutMapping("wcag2krav/{id}")
   fun updateWcagKrav(

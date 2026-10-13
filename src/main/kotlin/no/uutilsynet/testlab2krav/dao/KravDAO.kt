@@ -21,7 +21,7 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
 
   object KravParams {
 
-      val listWcag2xSql: String =
+    val listWcag2xSql: String =
         """
         select id,
                 tittel,
@@ -43,10 +43,9 @@ class KravDAO(val jdbcTemplate: NamedParameterJdbcTemplate) {
     val selectById = "$listWcag2xSql where id = :id"
 
     val selectBySuksesskriterium = "$listWcag2xSql where suksesskriterium = :suksesskriterium"
-
   }
 
-    fun listWcagKrav(): List<KravWcag2x> {
+  fun listWcagKrav(): List<KravWcag2x> {
     return jdbcTemplate.query(listWcag2xSql, Wcag2xRowmapper())
   }
 
